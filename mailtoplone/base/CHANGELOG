@@ -1,0 +1,174 @@
+2008-01-30 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 29
+    * described egg in README.txt
+ 
+2008-01-30 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 28
+    * changed dropemail.py to dropemail
+        * specified pythonpath in script
+        * script now takes url of inbox folder
+          and automatically appends the xmlrpcview to it
+
+2008-01-29 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 27
+    * BaseDropBoxFactory now correctly regards effectiveRange when searching the
+      catalog for MailDropBoxes
+
+2008-01-29 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 26
+    * MailDropBox, now uses IdGenerator utility to generate id for email
+
+2008-01-29 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 25
+    * ICalEventFactory now fires a ObjectInitializedEvent for each created event
+
+2008-01-28 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 24
+    * fixed bug: ICalEventFactory, multiple events in one ics are now
+      generated correctly (use nkw as copy of kw...)
+    * implemented EventDropBox, walks through the mail, and passes all text/calendar
+      parts in decoded form (so just the ical) to the ICalEventFactory
+
+2008-01-28 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 23
+    * created utility IdGenerator, and added tests for it's id generation
+    * modified BlogMailDropBox, ICalEventFactory to use IdGenerator
+
+2008-01-28 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 22
+    * added extraction and generation of contactfields to ICalEventFactory
+
+2008-01-28 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 21
+    * moved doctests for usecases Blog and Event to doc folder,
+    * fixed ICalEventFactory to correctly support multiple events in the
+      icalstr ( use loacl nkw instead of kw for each event)
+    * ICalEventFactory now generates ids for the events it creates
+
+2008-01-27 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 20
+    * begin of implementation for event field generation contact...
+
+2008-01-17 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 20
+    * moved doctests for usecases Blog and Event to doc folder,
+    * fixed utility to coorectly support multiple events in the
+      icalstr ( use loacl nkw instead of kw for each event)
+
+2008-01-17 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 19
+    * note that mailtoplone.base requires icalendar library now
+    * ICalEventFactory:
+        * create event out of ics ( source: plone export )
+        * implemented field generation:
+            * title
+            * description
+            * location
+            * eventUrl
+            * eventType (Categories)
+            * startDate
+            * endDate
+        * added myutils.py containing a custom dt2DT method 
+          (thank's to plone4artists calendar)
+        * added unit tests for the generated fields
+
+2008-01-10 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 18
+    * added Markerinterface IEventMailDropBoxMarker,
+      added adapter EventMailDropBox
+      added interface IEventFactory 
+      added interface ICalEventFactory
+
+2008-01-10 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 17
+    * added basic doctest to for BlogMailDropBox
+
+2008-01-10 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 16
+    * adapter MaildropBox
+        * only encodes mail as utf-8 if mail is a unicode
+    * usecase: Blog ( create news item out of mail )
+        * Markerinterface IBlogMailDropBoxMarker
+          (derives from IMailDropBoxMarker, so is found by BaseDropBoxFactory)
+          (remember to reindex object after marking with interface)
+        * created directory adapters to hold additional adapters, first adapter:
+          BlogMailDropBox, adapts IBlogMailDropBoxmarker to a IMailDropBox.
+        * current functionality: set body (priority 1 text/html, 2 text/plain)
+
+2008-01-08 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 15
+    * adapter MailDropBox
+        * encodes  passed mail as utf-8 ( so no errors when passing unicode strings to adapter)
+        * uses setContentType to set contentType to text/plain
+          (so content will be indexed, and can be viewed in preview of email)
+
+2008-01-08 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 14
+    * changed type settings for Email, now is global addable,
+    * changed test to test if email wasn't global addable
+
+2008-01-08 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 13
+    * script dropemail.py now in scripts directory
+
+2008-01-07 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 12
+    * added script dropemail.py, parameters url(required) and file(use stdin if omitted)
+
+2007-12-19 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 11
+    * changed adapter MailDropBox to processForm after invoking the factory
+      so Archetypes specific IObjectInitializedEvent gets emitted
+
+2007-12-18 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 10
+    * added tests for xmlrpcview
+
+2007-12-18 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 9
+    * tuned id generation in adapter IMailDropBox
+    * added first test for xmlrpcview
+
+2007-12-18 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 8
+    * specified browserview to make drop method available via xmlrpc
+        * class: XMLRPCView, name: xmlrpcview, attribute: drop
+    * View is registered for IMailDropBoxMarker
+
+2007-12-17 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 7
+    * specified adapter (IMailDropBoxMarker -> IMailDropBox)
+        * adds drop(string) method (id: email<0-n>)
+        * this method takes a string and generates an Email object
+    * adapter is registered in configure.zcml for IMailDropBoxMarker
+    * Type InBox now implements both IInBox and IMailDropBoxMarker
+    * added unittests and Doctest(generation of emails using drop)
+
+2007-12-13 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 6
+    * added propertiestool.xml to specify that type Email gets appended /view in navigation portlet
+
+2007-12-13 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 5
+    * changed gs type specifications for InBox and Email, to provide functionality like
+      folder and file (file_view, folderviews etc)
+
+2007-12-13 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 4
+    * Changed type Email (now bases on ATFile, global allow = false)
+    * added Content icons for Email, InBox
+    * added test to check that Email isn't global addable
+
+2007-12-13 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 3
+    * added skeleton type InBox (folderish)
+    * added tests for InBox in /tests
+
+2007-12-11 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 2
+    * added basic test setup in /tests
+
+2007-12-11 mr_savage <hans-peter.locher@inquant.de>
+    * 0.1 build 1
+    * initial Product Skeleton
+        * contains content type Email
