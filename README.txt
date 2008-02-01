@@ -10,10 +10,10 @@ Authors
 -------
 
 Stefan Eletzhofer --
-    "stefan.eletzhofer@inquant.de"
+    "<stefan dot eletzhofer at inquant de>"
 
 Hans-Peter Locher --
-    "hans-peter.locher@inquant.de"
+    "<hans-peter dot locher at inquant de>"
 
 Copyright (c) 2007-2008 InQuant GmbH -- "http://www.inquant.de"
 
