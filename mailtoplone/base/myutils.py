@@ -1,12 +1,31 @@
 # Thank's to plone4artists calendar
+"""
+Calendar utilities
+
+Doublecheck conversions:
+
+    >>> brt = gettz('Brazil/East')
+
+    >>> dt = DateTime('2005/07/07 18:00:00 Brazil/East')
+    >>> dt == dt2DT(DT2dt(dt))
+    True
+
+    >>> dt = datetime.datetime(2005, 07, 07, 18, 00, 00, tzinfo=tz)
+    >>> dt == DT2dt(dt2DT(dt))
+    True
+
+"""
 
 import datetime
 from DateTime import DateTime
-
 try:
     import dateutil
+    import dateutil.tz
 except ImportError:
-    print ImportError
+    # To make Calendaring patch in dateutils:
+    import Products.Calendaring
+    import dateutil
+    import dateutil.tz
 
 def gettz(name=None):
     try:
@@ -65,3 +84,48 @@ def dt2DT(dt, tzname=None):
         dt = dt.replace(tzinfo=tz)
     return DateTime(dt.isoformat())
 
+def DT2dt(dt):
+    """Convert a DateTime to python's datetime in UTC.
+
+    >>> dt = DT2dt(DateTime('2005/11/07 18:00:00 UTC'))
+    >>> dt
+    datetime.datetime(2005, 11, 7, 18, 0, tzinfo=tzfile('/usr/share/zoneinfo/Universal'))
+    >>> dt.astimezone(gettz('UTC'))
+    datetime.datetime(2005, 11, 7, 18, 0, tzinfo=tzfile('/usr/share/zoneinfo/UTC'))
+
+    >>> dt = DT2dt(DateTime('2005/11/07 18:00:00 Brazil/East'))
+    >>> dt
+    datetime.datetime(2005, 11, 7, 18, 0, tzinfo=tzfile('/usr/share/zoneinfo/Brazil/East'))
+    >>> dt.astimezone(gettz('UTC'))
+    datetime.datetime(2005, 11, 7, 20, 0, tzinfo=tzfile('/usr/share/zoneinfo/UTC'))
+
+    >>> dt = DT2dt(DateTime('2005/11/07 18:00:00 GMT-2'))
+    >>> dt
+    datetime.datetime(2005, 11, 7, 18, 0, tzinfo=tzoffset('GMT-2', -7200))
+    >>> dt.astimezone(gettz('UTC'))
+    datetime.datetime(2005, 11, 7, 20, 0, tzinfo=tzfile('/usr/share/zoneinfo/UTC'))
+
+    >>> dt = DT2dt(DateTime('2005/07/07 18:00:00 Brazil/East'))
+    >>> dt
+    datetime.datetime(2005, 7, 7, 18, 0, tzinfo=tzfile('/usr/share/zoneinfo/Brazil/East'))
+    >>> dt.astimezone(gettz('UTC'))
+    datetime.datetime(2005, 7, 7, 21, 0, tzinfo=tzfile('/usr/share/zoneinfo/UTC'))
+
+    >>> dt = DT2dt(DateTime('2005/07/07 18:00:00 GMT-3'))
+    >>> dt
+    datetime.datetime(2005, 7, 7, 18, 0, tzinfo=tzoffset('GMT-3', -10800))
+    >>> dt.astimezone(gettz('UTC'))
+    datetime.datetime(2005, 7, 7, 21, 0, tzinfo=tzfile('/usr/share/zoneinfo/UTC'))
+    """
+    tz = gettz(dt.timezone())
+    value = datetime.datetime(dt.year(), dt.month(), dt.day(),
+                              dt.hour(), dt.minute(), int(dt.second()),
+                              int(dt.second()*1000000) % 1000000, tzinfo=tz)
+    return value
+
+_extra_times = {}
+for x in range(-12, 0) + range(1, 13):
+    for n in ('GMT', 'UTC'):
+        name = '%s%+i' % (n, x)
+        tz = dateutil.tz.tzoffset(name, x*3600)
+        _extra_times[name] = tz
