@@ -159,7 +159,11 @@ class ICalEventFactory(object):
                 if not source in eventobject.keys():
                     nkw[target] = default
                 else:
-                    gmt_time = dt2DT(eventobject.decoded(source))
+                    if eventobject[source].params.has_key('TZID'):
+                        gmt_time = dt2DT(eventobject.decoded(source), \
+                                   tzname=eventobject[source].params['TZID'])
+                    else:
+                        gmt_time = dt2DT(eventobject.decoded(source))
                     localised_time = gmt_time.toZone(gmt_time.localZone())
                     nkw[target] = localised_time
 
@@ -171,7 +175,11 @@ class ICalEventFactory(object):
                 if not source in eventobject.keys():
                     nkw[target] = default
                 else:
-                    gmt_time = dt2DT(eventobject.decoded(source))
+                    if eventobject[source].params.has_key('TZID'):
+                        gmt_time = dt2DT(eventobject.decoded(source), \
+                                   tzname=eventobject[source].params['TZID'])
+                    else:
+                        gmt_time = dt2DT(eventobject.decoded(source))
                     localised_time = gmt_time.toZone(gmt_time.localZone())
                     nkw[target] = localised_time
 
