@@ -37,6 +37,9 @@ from Products.CMFPlone.utils import getToolByName
 
 from mailtoplone.base import interfaces
 
+#for generating ids when passed non url compatible id to utility
+from urllib import quote as url_quote
+
 import icalendar # the icalenadar library
 from mailtoplone.base.myutils import dt2DT
 
@@ -65,6 +68,7 @@ class IdGenerator(object):
     interface.implements(interfaces.IIdGenerator)
 
     def generateId(self, context, id='item'):
+        id = url_quote(id, '').replace('-','--').replace('%','-')
         prefix = id
         ids = context.objectIds()
         nr = 0
