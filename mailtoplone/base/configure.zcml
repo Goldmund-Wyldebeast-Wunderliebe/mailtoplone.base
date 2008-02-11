@@ -44,4 +44,16 @@
         factory=".adapter.MailDropBox"
         />
 
+    <interface 
+      interface=".interfaces.IMailDroppedEvent" 
+      type="plone.contentrules.rule.interfaces.IRuleEventType"
+      name="An E-Mail was dropped into a drop box"
+      />
+
+    <!--<subscriber
+      for="Products.ATContentTypes.interface.news.IATNewsItem
+           .events.IMailDroppedEvent"
+      handler=".events.maildropped"
+      />-->
+
 </configure>

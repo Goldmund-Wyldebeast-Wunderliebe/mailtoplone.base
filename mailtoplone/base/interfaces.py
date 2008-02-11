@@ -24,8 +24,10 @@ __revision__  = "$Revision: 36831 $"
 __version__   = '$Revision: 1.7 $'[11:-2]
 
 
-from zope.interface import Interface
+from zope import component
+from zope import interface
 from zope import schema
+
 
 from zope.app.container.constraints import contains
 from zope.app.container.constraints import containers
@@ -36,23 +38,23 @@ from mailtoplone.base import baseMessageFactory as _
 # Interfaces go here ...
 # -*- extra stuff goes here -*-
 
-class IInBox(Interface):
+class IInBox(interface.Interface):
     """A folderish type containing Emails"""
 
-class IEmail(Interface):
+class IEmail(interface.Interface):
     """A file like content containing an email"""
 
 # SELETZ
-class IMailDropBoxMarker(Interface):
+class IMailDropBoxMarker(interface.Interface):
     """ marker interface for mail drop boxes """
 
-class IMailDropBox(Interface):
+class IMailDropBox(interface.Interface):
     """ a mail drop box """
     def drop(mail):
         """ drop a mail into this mail box. The mail is
             a string with the complete email content """
 
-class IMailDropBoxFactory(Interface):
+class IMailDropBoxFactory(interface.Interface):
     """ a factory for mail drop boxes """
 
     def __call__(context, key):
@@ -66,7 +68,7 @@ class IBlogMailDropBoxMarker(IMailDropBoxMarker):
 class IEventMailDropBoxMarker(IMailDropBoxMarker):
     """ marker interface for event mail drop boxes """
 
-class IEventFactory(Interface):
+class IEventFactory(interface.Interface):
     """ creates a AT Event out of something. Keyword args
         are passed to invokeFactory() """
 
@@ -95,10 +97,14 @@ class IICalEventFactory(IEventFactory):
     def createEvent(icalevt, context, **kwargs ):
         """ creates an AT Event out of an iCal object """
 
-class IIdGenerator(Interface):
+class IIdGenerator(interface.Interface):
     """ generate an id unique in the context """
 
     def generateId(context, id=None):
         "return id unique in the context"
+
+class IMailDroppedEvent(component.interfaces.IObjectEvent):
+    object = interface.Attribute("The mail object of the event.")
+    context = interface.Attribute("The context of the event.")
 
 # vim: set ft=python ts=4 sw=4 expandtab :

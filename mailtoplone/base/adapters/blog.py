@@ -23,11 +23,20 @@ __docformat__ = 'plaintext'
 __revision__  = "$Revision: 36831 $"
 __version__   = '$Revision: 1.7 $'[11:-2]
 
-
-from zope import interface, component
-
-from mailtoplone.base.interfaces import IMailDropBox, IIdGenerator
 import email
+import logging
+
+from zope import interface
+from zope.event import notify
+
+from zope.app.container.interfaces import INameChooser
+
+from mailtoplone.base.interfaces import IMailDropBox
+from mailtoplone.base.events import MailDroppedEvent
+
+from Acquisition import aq_base
+
+info = logging.getLogger().info
 
 class BlogMailDropBox(object):
     """ adapts IBlogMailDropBoxmarker to a IMailDropBox """
@@ -66,24 +75,37 @@ class BlogMailDropBox(object):
 
         if not body_found:
                     body_found = True
-                    body = "Fooooo"
+                    body = ""
                     format = 'text/plain'
                     content_type = 'text/plain'
 
-        #start description extraction
-        # todo: get a description from the email
+        # Subject and description
+        for key in "Subject subject Betreff x-blog-title".split():
+            subject = mailobj.get(key)
+            if subject is not None:
+                break
+        description = mailobj.get("x-blog-description", "")
 
-        text = "XXX"
-        type = 'News Item'
-        description='todo'
-        # generate id
-        idgen = component.getUtility(IIdGenerator)
-        id = idgen.generateId(self.context, 'news')
+        info( "BlogMailDropBox: new mail with subject '%s'" % subject )
 
-        self.context.invokeFactory(type ,id=id , title=id, format=format, \
-                                   content_type=content_type, description=text, text=body)
+        # XXX: the namechooer does a getattr('check_id'), which results in a python
+        #      script (!!) which is aquired. That script makes the name chooser not choose
+        #      correctly, thus we strip acquisition. Bah.
+        chooser = INameChooser(self.context)
+        id = chooser.chooseName(subject, aq_base(self.context))
 
-        getattr(self.context, id, None).processForm()
+        self.context.invokeFactory(
+                'News Item',
+                id=id,
+                title=subject,
+                format=format,
+                content_type=content_type,
+                description=description,
+                text=body
+                )
 
-        
+        news = getattr(self.context, id)
+        news.processForm()
+        notify(MailDroppedEvent(news, self.context))
+
 # vim: set ft=python ts=4 sw=4 expandtab :
