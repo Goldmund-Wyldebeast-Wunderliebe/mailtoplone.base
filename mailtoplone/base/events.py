@@ -40,7 +40,6 @@ class MailDroppedEvent(object):
 _marker = object()
 
 def maildropped(object, event):
-    from ipdb import set_trace; set_trace() 
 
     if event.context is not _marker:
         notify(MailDroppedEvent(object, _marker))

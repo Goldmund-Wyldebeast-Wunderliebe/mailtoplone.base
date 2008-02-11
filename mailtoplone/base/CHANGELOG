@@ -1,3 +1,7 @@
+2008-02-11  mr_savage <hans-peter.locher@inquant.de>
+    * version 0.2 build 5
+    * events.py, removed a ipdb import
+
 2008-02-11  Stefan Eletzhofer <stefan.eletzhofer@inquant.de>
 
     * adapters/blog.py (BlogMailDropBox.drop): fetch description from header
