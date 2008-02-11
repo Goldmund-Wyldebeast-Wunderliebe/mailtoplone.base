@@ -32,10 +32,6 @@
         factory=".utilities.ICalEventFactory"
         />
 
-    <utility
-        factory=".utilities.IdGenerator"
-        />
-
     <!-- Adapter  IMailDropBoxMarker -> IMailDropBox -->
 
     <adapter

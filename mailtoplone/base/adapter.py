@@ -25,8 +25,11 @@ __version__   = '$Revision: 1.7 $'[11:-2]
 
 
 from zope import interface, component
+from zope.app.container.interfaces import INameChooser
 
-from mailtoplone.base.interfaces import IMailDropBox, IIdGenerator
+from Acquisition import aq_base
+
+from mailtoplone.base.interfaces import IMailDropBox
 
 class MailDropBox(object):
     """ adapts a IMailDropBoxMarker to a IMailDropBox """
@@ -47,8 +50,8 @@ class MailDropBox(object):
         format = 'text/plain'
         content_type='text/plain'
         # generate id
-        idgen = component.getUtility(IIdGenerator)
-        id = idgen.generateId(self.context, 'email')
+        chooser = INameChooser(self.context)
+        id = chooser.chooseName('email', aq_base(self.context))
         
         self.context.invokeFactory(type ,id=id , title=id, format=format, \
                                    content_type=content_type, file=mail)

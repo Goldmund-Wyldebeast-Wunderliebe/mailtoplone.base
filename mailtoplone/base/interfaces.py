@@ -97,12 +97,6 @@ class IICalEventFactory(IEventFactory):
     def createEvent(icalevt, context, **kwargs ):
         """ creates an AT Event out of an iCal object """
 
-class IIdGenerator(interface.Interface):
-    """ generate an id unique in the context """
-
-    def generateId(context, id=None):
-        "return id unique in the context"
-
 class IMailDroppedEvent(component.interfaces.IObjectEvent):
     object = interface.Attribute("The mail object of the event.")
     context = interface.Attribute("The context of the event.")

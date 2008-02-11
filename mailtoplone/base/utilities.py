@@ -30,25 +30,25 @@ import logging
 from DateTime import DateTime
 from zope import component
 from zope import interface
+from zope import event
+from zope.app.container.interfaces import INameChooser
 
 from Acquisition import aq_inner
 
+from Acquisition import aq_base
+
 from Products.CMFPlone.utils import getToolByName
 
-from mailtoplone.base import interfaces
+import icalendar
 
-#for generating ids when passed non url compatible id to utility
-from urllib import quote as url_quote
-
-import icalendar # the icalenadar library
-from mailtoplone.base.myutils import dt2DT
-
-# validtion for generating the contact fields
 from Products.validation import validation
 
-# we need to fire the ObjectInitializedEvent after creating each Event
-from zope import event
 from Products.Archetypes.event import ObjectInitializedEvent
+
+from Acquisition import aq_base
+
+from mailtoplone.base import interfaces
+from mailtoplone.base.myutils import dt2DT
 
 class BaseDropBoxFactory(object):
     interface.implements(interfaces.IMailDropBoxFactory)
@@ -64,27 +64,13 @@ class BaseDropBoxFactory(object):
         for brain in brains:
             yield interfaces.IMailDropBox(brain.getObject())
 
-class IdGenerator(object):
-    interface.implements(interfaces.IIdGenerator)
-
-    def generateId(self, context, id='item'):
-        id = url_quote(id, '').replace('-','--').replace('%','-')
-        prefix = id
-        ids = context.objectIds()
-        nr = 0
-        while id in ids:
-            id = "".join([prefix,str(nr)])
-            nr = nr + 1
-        return id
-
-
 
 class ICalEventFactory(object):
     interface.implements(interfaces.IEventFactory)
 
     def createEvent(self, ical_str, context, **kw):
 
-        idgen = component.getUtility(interfaces.IIdGenerator)
+        chooser = INameChooser(context)
         # get all VEVENT objects out of the ical_str
         events = []
         for eventobject in icalendar.Calendar.from_string(ical_str).walk(name='VEVENT'):
@@ -98,11 +84,11 @@ class ICalEventFactory(object):
             default = 'event'
             if not target in nkw.keys():
                 if not source in eventobject.keys():
-                    nkw[target] = idgen.generateId(context, default)
+                    nkw[target] = chooser.chooseName(default, aq_base(context))
                 else:
-                    nkw[target] = idgen.generateId(context, eventobject.decoded(source))
+                    nkw[target] = chooser.chooseName(eventobject.decoded(source), aq_base(context))
             else:
-                nkw[target] = idgen.generateId(context, nkw[target])
+                nkw[target] = chooser.chooseName(nkw[target], aq_base(context))
  
             # generate the title
             source = 'SUMMARY'

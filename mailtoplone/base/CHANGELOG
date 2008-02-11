@@ -1,4 +1,11 @@
 2008-02-11  mr_savage <hans-peter.locher@inquant.de>
+    * version 0.2 build 6
+    * refactored adapters MailDropBox, utility ICalEventFactory
+      to use INameChooser
+    * removed IdGenerator
+    * interfaces.py: removed IIdGenerator interface
+ 
+2008-02-11  mr_savage <hans-peter.locher@inquant.de>
     * version 0.2 build 5
     * events.py, removed a ipdb import
 

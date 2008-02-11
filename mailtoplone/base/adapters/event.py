@@ -28,7 +28,6 @@ from zope import component
 
 from mailtoplone.base.interfaces import IMailDropBox, IEventFactory
 import email
-# import icalenadar
 
 class EventMailDropBox(object):
     """ adapts IEventMailDropBoxmarker to a IMailDropBox """
