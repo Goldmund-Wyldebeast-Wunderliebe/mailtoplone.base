@@ -65,11 +65,6 @@ BaseDropBoxFactory:
     Used to find objects providing IMailDropBoxMarker with id=key. Used by
     the deliver action in mailtoplone.contentrules.
 
-IdGenerator:
-
-    Used to generate a simple id unique for the given context. Used when
-    generating content (Emails, News, Events)
-
 ICalEventFactory:
 
     Taking an icalendar string, this utility creates an ATEvent out of each

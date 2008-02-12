@@ -1,3 +1,10 @@
+2008-02-12  mr_savage <hans-peter.locher@inquant.de>
+    * version 0.2 build 7
+    * utilities: ICalEventFactory
+    * changed start/endDate creation, utility now extracts the VTIMEZONE objects
+      and generates the apropriate tzinfo out of it
+      need to write tests for the date creation ( only Browsertests done)
+ 
 2008-02-11  mr_savage <hans-peter.locher@inquant.de>
     * version 0.2 build 6
     * refactored adapters MailDropBox, utility ICalEventFactory

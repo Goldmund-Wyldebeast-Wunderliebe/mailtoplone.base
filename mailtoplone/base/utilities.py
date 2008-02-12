@@ -40,12 +40,11 @@ from Acquisition import aq_base
 from Products.CMFPlone.utils import getToolByName
 
 import icalendar
+import dateutil
 
 from Products.validation import validation
 
 from Products.Archetypes.event import ObjectInitializedEvent
-
-from Acquisition import aq_base
 
 from mailtoplone.base import interfaces
 from mailtoplone.base.myutils import dt2DT
@@ -71,11 +70,22 @@ class ICalEventFactory(object):
     def createEvent(self, ical_str, context, **kw):
 
         chooser = INameChooser(context)
+
         # get all VEVENT objects out of the ical_str
         events = []
         for eventobject in icalendar.Calendar.from_string(ical_str).walk(name='VEVENT'):
             events.append(eventobject)
             
+        # extract VTIMEZONE Objects for startDate and endDate
+        # 1. remove unsopported properties(X-) from ical_str
+        li = ical_str.split('\n')
+        clean_ical_str = "\n".join([item for item in li if not item.startswith('X-')])
+        # 2. convert clean_ical_str to ical_file
+        ical_file = os.tmpfile()
+        ical_file.write(clean_ical_str)
+        ical_file.seek(0)
+        # 3. extract VTIMEZONES (there might be multiple VTIMEZONES in an calendar)
+        tzones = dateutil.tz.tzical(ical_file)
         for eventobject in events:
             nkw = kw.copy()
             # generate the id
@@ -141,6 +151,7 @@ class ICalEventFactory(object):
                 else:
                     nkw[target] = eventobject.get(source).split(",")
 
+
             # generate the startDate
             source = 'DTSTART'
             target = 'startDate'
@@ -150,12 +161,11 @@ class ICalEventFactory(object):
                     nkw[target] = default
                 else:
                     if eventobject[source].params.has_key('TZID'):
-                        gmt_time = dt2DT(eventobject.decoded(source), \
-                                   tzname=eventobject[source].params['TZID'])
+                        tzone = tzones.get(eventobject[source].params['TZID'])
+                        gmt_time = dt2DT(eventobject.decoded(source).replace(tzinfo=tzone))
                     else:
                         gmt_time = dt2DT(eventobject.decoded(source))
-                    localised_time = gmt_time.toZone(gmt_time.localZone())
-                    nkw[target] = localised_time
+                    nkw[target] = gmt_time.toZone(gmt_time.localZone())
 
              # generate the endDate
             source = 'DTEND'
@@ -166,12 +176,12 @@ class ICalEventFactory(object):
                     nkw[target] = default
                 else:
                     if eventobject[source].params.has_key('TZID'):
-                        gmt_time = dt2DT(eventobject.decoded(source), \
-                                   tzname=eventobject[source].params['TZID'])
+                        tzone = tzones.get(eventobject[source].params['TZID'])
+                        gmt_time = dt2DT(eventobject.decoded(source).replace(tzinfo=tzone))
                     else:
                         gmt_time = dt2DT(eventobject.decoded(source))
-                    localised_time = gmt_time.toZone(gmt_time.localZone())
-                    nkw[target] = localised_time
+                    nkw[target] = gmt_time.toZone(gmt_time.localZone())
+
 
             # generate the contact fields
             source = 'CONTACT'
