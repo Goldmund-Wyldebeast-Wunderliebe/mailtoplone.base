@@ -23,6 +23,9 @@ __docformat__ = 'plaintext'
 
 import unittest
 from zope import component
+from zope.component import adapter
+
+from Products.Archetypes.interfaces import IObjectInitializedEvent
 
 from mailtoplone.base.tests.base import MailToPloneBaseTestCase
 from mailtoplone.base.interfaces import IEventFactory
@@ -106,6 +109,7 @@ class TestEVTFactory(MailToPloneBaseTestCase):
         self.failUnless("<p>thetext</p>" == self.folder.eventtitle.getText())
 
 class TestEVTFields(MailToPloneBaseTestCase):
+    """ note: startDate and endDate are tested seperately in test_eventfactory_time.py """
 
     def afterSetUp(self):
         self.setRoles(('Manager',))
@@ -126,12 +130,6 @@ class TestEVTFields(MailToPloneBaseTestCase):
 
     def testEventType(self):
         self.failUnless(self.folder.eventtitle.eventType == (u'another event category', u'an event category'))
-
-    def testEventStartDate(self):
-        self.failUnless(str(self.folder.eventtitle.startDate) == '2008/01/11 09:25:00 GMT+1')
-
-    def testEventEndDate(self):
-        self.failUnless(str(self.folder.eventtitle.endDate) == '2008/01/11 10:25:00 GMT+1')
 
     def testEventContactName(self):
         self.failUnless(self.folder.eventtitle.contactName == u'event contact name')
@@ -157,8 +155,6 @@ class TestEVTMult(MailToPloneBaseTestCase):
         e2 = self.folder.listFolderContents()[1]
         self.failUnless(e1.title != e2.title)
 
-from Products.Archetypes.interfaces import IObjectInitializedEvent
-from zope.component import adapter, provideHandler
 
 class TestEVTInitialization(MailToPloneBaseTestCase):
 
@@ -172,7 +168,7 @@ class TestEVTInitialization(MailToPloneBaseTestCase):
         def setSourceObject(new_event):
             self.sourceObject = new_event.object
         
-        provideHandler(setSourceObject)
+        component.provideHandler(setSourceObject)
         self.factory.createEvent(ICALSTR, self.folder)
         self.failUnless(self.folder.listFolderContents()[0] == self.sourceObject)
 

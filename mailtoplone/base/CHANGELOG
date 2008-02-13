@@ -1,27 +1,31 @@
-2008-02-12  mr_savage <hans-peter.locher@inquant.de>
+2008-02-13 mr_savage <hans-peter.locher@inquant.de>
+    * version 0.2 build 8
+    * added tests for ICalEventFactory start/endDate creation on various ics data
+
+2008-02-12 mr_savage <hans-peter.locher@inquant.de>
     * version 0.2 build 7
     * utilities: ICalEventFactory
     * changed start/endDate creation, utility now extracts the VTIMEZONE objects
       and generates the apropriate tzinfo out of it
       need to write tests for the date creation ( only Browsertests done)
  
-2008-02-11  mr_savage <hans-peter.locher@inquant.de>
+2008-02-11 mr_savage <hans-peter.locher@inquant.de>
     * version 0.2 build 6
     * refactored adapters MailDropBox, utility ICalEventFactory
       to use INameChooser
     * removed IdGenerator
     * interfaces.py: removed IIdGenerator interface
  
-2008-02-11  mr_savage <hans-peter.locher@inquant.de>
+2008-02-11 mr_savage <hans-peter.locher@inquant.de>
     * version 0.2 build 5
     * events.py, removed a ipdb import
 
-2008-02-11  Stefan Eletzhofer <stefan.eletzhofer@inquant.de>
+2008-02-11 Stefan Eletzhofer <stefan.eletzhofer@inquant.de>
 
     * adapters/blog.py (BlogMailDropBox.drop): fetch description from header
 	if there. Use multiple possible "subject" keys.
 
-2008-02-08  Stefan Eletzhofer <stefan.eletzhofer@inquant.de>
+2008-02-08 Stefan Eletzhofer <stefan.eletzhofer@inquant.de>
 
     * events.py: added MailDroppedEvent
     * configure.zcml: registered IMailDroppedEvent to be recognized as a
