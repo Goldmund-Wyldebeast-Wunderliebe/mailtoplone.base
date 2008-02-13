@@ -155,10 +155,9 @@ class ICalEventFactory(object):
             # generate the startDate
             source = 'DTSTART'
             target = 'startDate'
-            default = ''
             if not target in nkw.keys():
                 if not source in eventobject.keys():
-                    nkw[target] = default
+                    pass
                 else:
                     if eventobject[source].params.has_key('TZID'):
                         tzone = tzones.get(eventobject[source].params['TZID'])
@@ -170,10 +169,9 @@ class ICalEventFactory(object):
              # generate the endDate
             source = 'DTEND'
             target = 'endDate'
-            default = ''
             if not target in nkw.keys():
                 if not source in eventobject.keys():
-                    nkw[target] = default
+                    pass
                 else:
                     if eventobject[source].params.has_key('TZID'):
                         tzone = tzones.get(eventobject[source].params['TZID'])

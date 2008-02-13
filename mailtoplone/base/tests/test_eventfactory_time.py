@@ -91,12 +91,30 @@ class TestEVTRfc2445(MailToPloneBaseTestCase):
     def testEventEndDate(self):
         self.failUnless(str(self.e.endDate.toZone('UTC')) == '1998/03/12 14:30:00 Universal')
 
+class TestEVTApple(MailToPloneBaseTestCase):
+
+    def afterSetUp(self):
+        icalstr = open(os.path.join(DIRECTORY, 'data/apple.ics'),'rb').read()
+        self.setRoles(('Manager',))
+        factory = component.queryUtility(IEventFactory)
+        factory.createEvent(icalstr, self.folder)
+        self.e = self.folder.listFolderContents()[0]
+    
+    def testEventStartDate(self):
+        self.failUnless(str(self.e.startDate.toZone('UTC')) == '2008/02/13 17:15:00 Universal')
+
+    def testEventEndDate(self):
+        """apple.ics has no DTEND property"""
+        pass
+
+
 def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestEVTGoogle))
     suite.addTest(unittest.makeSuite(TestEVTOwa))
     suite.addTest(unittest.makeSuite(TestEVTPlone))
     suite.addTest(unittest.makeSuite(TestEVTRfc2445))
+    suite.addTest(unittest.makeSuite(TestEVTApple))
     return suite
 
 # vim: set ft=python ts=4 sw=4 expandtab :
