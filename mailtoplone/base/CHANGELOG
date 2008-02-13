@@ -1,4 +1,9 @@
 2008-02-13 mr_savage <hans-peter.locher@inquant.de>
+    * version 0.2 build 10
+    * ICalEventFactory
+    * added support for DURATION specification in VEVENTS for generationg the EndDate
+
+2008-02-13 mr_savage <hans-peter.locher@inquant.de>
     * version 0.2 build 9
     * added tests for ICalEventFactory start/endDate apple.ics
     * bugfix: startDate / endDate won't get an "" as default value anymore

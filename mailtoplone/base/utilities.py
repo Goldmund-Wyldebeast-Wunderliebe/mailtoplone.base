@@ -140,7 +140,6 @@ class ICalEventFactory(object):
                 else:
                     nkw[target] = eventobject.decoded(source)
 
-
             # generate the eventType
             source = 'CATEGORIES'
             target = 'eventType'
@@ -151,14 +150,11 @@ class ICalEventFactory(object):
                 else:
                     nkw[target] = eventobject.get(source).split(",")
 
-
             # generate the startDate
             source = 'DTSTART'
             target = 'startDate'
             if not target in nkw.keys():
-                if not source in eventobject.keys():
-                    pass
-                else:
+                if source in eventobject.keys():
                     if eventobject[source].params.has_key('TZID'):
                         tzone = tzones.get(eventobject[source].params['TZID'])
                         gmt_time = dt2DT(eventobject.decoded(source).replace(tzinfo=tzone))
@@ -166,12 +162,19 @@ class ICalEventFactory(object):
                         gmt_time = dt2DT(eventobject.decoded(source))
                     nkw[target] = gmt_time.toZone(gmt_time.localZone())
 
-             # generate the endDate
+             # generate the endDate, it might be specified as DTEND, or as DTSTART + DURATION
             source = 'DTEND'
+            source2 = 'DURATION'
             target = 'endDate'
             if not target in nkw.keys():
                 if not source in eventobject.keys():
-                    pass
+                    if 'DTSTART' in eventobject.keys() and source2 in eventobject.keys():
+                        if eventobject['DTSTART'].params.has_key('TZID'):
+                            tzone = tzones.get(eventobject['DTSTART'].params['TZID'])
+                            gmt_time = dt2DT(eventobject.decoded('DTSTART').replace(tzinfo=tzone) + eventobject.decoded(source2))
+                        else:
+                            gmt_time = dt2DT(eventobject.decoded(DTSTART)+eventobject.decoded(source2))
+                        nkw[target] = gmt_time.toZone(gmt_time.localZone())
                 else:
                     if eventobject[source].params.has_key('TZID'):
                         tzone = tzones.get(eventobject[source].params['TZID'])
@@ -179,7 +182,6 @@ class ICalEventFactory(object):
                     else:
                         gmt_time = dt2DT(eventobject.decoded(source))
                     nkw[target] = gmt_time.toZone(gmt_time.localZone())
-
 
             # generate the contact fields
             source = 'CONTACT'

@@ -104,9 +104,7 @@ class TestEVTApple(MailToPloneBaseTestCase):
         self.failUnless(str(self.e.startDate.toZone('UTC')) == '2008/02/13 17:15:00 Universal')
 
     def testEventEndDate(self):
-        """apple.ics has no DTEND property"""
-        pass
-
+        self.failUnless(str(self.e.endDate.toZone('UTC')) == '2008/02/13 18:15:00 Universal')
 
 def test_suite():
     suite = unittest.TestSuite()
