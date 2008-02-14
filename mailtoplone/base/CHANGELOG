@@ -1,4 +1,9 @@
 2008-02-14 mr_savage <hans-peter.locher@inquant.de>
+    * version 0.2 build 13
+    * EventMailDropBox: changed to set body of created events like
+      BlogMailDropBox (use BodyFactory - has text/html as precedence)
+
+2008-02-14 mr_savage <hans-peter.locher@inquant.de>
     * version 0.2 build 12
     * utilities.py, adapter.py, blog.py
     * fixed bug ( id's hadn't been quoted by NameChooser, use additional

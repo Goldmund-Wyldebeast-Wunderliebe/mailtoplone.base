@@ -26,8 +26,11 @@ __version__   = '$Revision: 1.7 $'[11:-2]
 from zope import interface
 from zope import component
 
-from mailtoplone.base.interfaces import IMailDropBox, IEventFactory
 import email
+
+from mailtoplone.base.interfaces import IMailDropBox
+from mailtoplone.base.interfaces import IEventFactory
+from mailtoplone.base.interfaces import IBodyFactory
 
 class EventMailDropBox(object):
     """ adapts IEventMailDropBoxmarker to a IMailDropBox """
@@ -42,11 +45,10 @@ class EventMailDropBox(object):
         a string with the complete email content """
 
         factory = component.queryUtility(IEventFactory)
-        # Todo:
-        # walk through mail, find body, and text/calendar attachment(s)
-        # call factory for each text/calendar attachment.
-        # pass body,
-        # write tests prior to do so!
+        # get the body and matching content_type
+        bodyfactory = component.queryUtility(IBodyFactory)
+        body, content_type = bodyfactory(mail)
+        format = content_type
 
         mailobj = email.message_from_string(mail)
         
@@ -54,6 +56,12 @@ class EventMailDropBox(object):
         for part in mailobj.walk():
             if part.get_content_type() == 'text/calendar':
                 ics = part.get_payload(decode=1)
-                factory.createEvent(ics, self.context)
+                factory.createEvent(
+                        ics,
+                        self.context,
+                        content_type=content_type,
+                        format=format,
+                        text=body
+                        )
 
 # vim: set ft=python ts=4 sw=4 expandtab :
