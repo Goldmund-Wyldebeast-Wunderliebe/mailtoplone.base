@@ -32,6 +32,7 @@ from zope import component
 from zope import interface
 from zope import event
 from zope.app.container.interfaces import INameChooser
+from plone.i18n.normalizer.interfaces import IIDNormalizer
 
 from Acquisition import aq_inner
 
@@ -39,6 +40,7 @@ from Acquisition import aq_base
 
 from Products.CMFPlone.utils import getToolByName
 
+import email
 import icalendar
 import dateutil
 
@@ -63,12 +65,45 @@ class BaseDropBoxFactory(object):
         for brain in brains:
             yield interfaces.IMailDropBox(brain.getObject())
 
+class BodyFactory(object):
+    interface.implements(interfaces.IBodyFactory)
+
+    def __call__(self, mail):
+
+        mailobj = email.message_from_string(mail)
+        body_found = False
+        for part in mailobj.walk():
+            if part.get_content_type() == 'text/html' and not body_found:
+                    body_found = True
+                    body = part.get_payload(decode=1)
+                    content_type = part.get_content_type()
+
+        for part in mailobj.walk():
+            if part.get_content_type() == 'text/plain' and not body_found:
+                    body_found = True
+                    body = part.get_payload(decode=1)
+                    content_type = part.get_content_type()
+
+        for part in mailobj.walk():
+            if part.get_content_type() == 'text/rfc822' and not body_found:
+                    body_found = True
+                    body = part.get_payload(decode=1)
+                    content_type = 'text/plain'
+
+        if not body_found:
+                    body_found = True
+                    body = ""
+                    content_type = 'text/plain'
+
+        return body, content_type
+
 
 class ICalEventFactory(object):
     interface.implements(interfaces.IEventFactory)
 
     def createEvent(self, ical_str, context, **kw):
 
+        normalizer = component.getUtility(IIDNormalizer)
         chooser = INameChooser(context)
 
         # get all VEVENT objects out of the ical_str
@@ -94,11 +129,11 @@ class ICalEventFactory(object):
             default = 'event'
             if not target in nkw.keys():
                 if not source in eventobject.keys():
-                    nkw[target] = chooser.chooseName(default, aq_base(context))
+                    nkw[target] = chooser.chooseName(normalizer.normalize(default), aq_base(context))
                 else:
-                    nkw[target] = chooser.chooseName(eventobject.decoded(source), aq_base(context))
+                    nkw[target] = chooser.chooseName(normalizer.normalize(eventobject.decoded(source)), aq_base(context))
             else:
-                nkw[target] = chooser.chooseName(nkw[target], aq_base(context))
+                nkw[target] = chooser.chooseName(normalizer.normalize(nkw[target]), aq_base(context))
  
             # generate the title
             source = 'SUMMARY'

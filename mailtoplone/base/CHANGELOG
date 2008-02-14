@@ -1,4 +1,17 @@
 2008-02-14 mr_savage <hans-peter.locher@inquant.de>
+    * version 0.2 build 12
+    * utilities.py, adapter.py, blog.py
+    * fixed bug ( id's hadn't been quoted by NameChooser, use additional
+      IDNormalizer
+    * utilities.py:
+        created new utility BodyFactory to get a body and a content_type from a mail
+    * blog.py:
+        nows uses BodyFactory
+    * interfaces.py: interface IBodyFactory
+    * configure.zcml:
+        registered BodyFactory utility
+
+2008-02-14 mr_savage <hans-peter.locher@inquant.de>
     * version 0.2 build 11
     * utilities.py, ICalEventFactory
     * added extraction of ATTENDEE -> attendees, use CN

@@ -32,6 +32,10 @@
         factory=".utilities.ICalEventFactory"
         />
 
+    <utility
+        factory=".utilities.BodyFactory"
+        />
+
     <!-- Adapter  IMailDropBoxMarker -> IMailDropBox -->
 
     <adapter

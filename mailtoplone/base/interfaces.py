@@ -97,6 +97,12 @@ class IICalEventFactory(IEventFactory):
     def createEvent(icalevt, context, **kwargs ):
         """ creates an AT Event out of an iCal object """
 
+class IBodyFactory(interface.Interface):
+    """ extract a body and a content_type from a mail string"""
+
+    def __call__(mail):
+        """ go through mail and return a body and a content_type """
+
 class IMailDroppedEvent(component.interfaces.IObjectEvent):
     object = interface.Attribute("The mail object of the event.")
     context = interface.Attribute("The context of the event.")

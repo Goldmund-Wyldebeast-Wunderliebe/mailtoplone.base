@@ -27,14 +27,17 @@ import email
 import logging
 
 from zope import interface
+from zope import component
 from zope.event import notify
 
 from zope.app.container.interfaces import INameChooser
-
-from mailtoplone.base.interfaces import IMailDropBox
-from mailtoplone.base.events import MailDroppedEvent
+from plone.i18n.normalizer.interfaces import IIDNormalizer
 
 from Acquisition import aq_base
+
+from mailtoplone.base.interfaces import IMailDropBox
+from mailtoplone.base.interfaces import IBodyFactory
+from mailtoplone.base.events import MailDroppedEvent
 
 info = logging.getLogger().info
 
@@ -49,35 +52,13 @@ class BlogMailDropBox(object):
     def drop(self, mail):
         """ drop a mail into this mail box. The mail is
         a string with the complete email content """
+        
+        # get the body and matching content_type
+        bodyfactory = component.queryUtility(IBodyFactory)
+        body, content_type = bodyfactory(mail)
+        format = content_type
 
         mailobj = email.message_from_string(mail)
-        body_found = False
-        for part in mailobj.walk():
-            if part.get_content_type() == 'text/html' and not body_found:
-                    body_found = True
-                    body = part.get_payload(decode=1)
-                    format = part.get_content_type()
-                    content_type = part.get_content_type()
-
-        for part in mailobj.walk():
-            if part.get_content_type() == 'text/plain' and not body_found:
-                    body_found = True
-                    body = part.get_payload(decode=1)
-                    format = part.get_content_type()
-                    content_type = part.get_content_type()
-
-        for part in mailobj.walk():
-            if part.get_content_type() == 'text/rfc822' and not body_found:
-                    body_found = True
-                    body = part.get_payload(decode=1)
-                    format = 'text/plain'
-                    content_type = 'text/plain'
-
-        if not body_found:
-                    body_found = True
-                    body = ""
-                    format = 'text/plain'
-                    content_type = 'text/plain'
 
         # Subject and description
         for key in "Subject subject Betreff x-blog-title".split():
@@ -91,8 +72,9 @@ class BlogMailDropBox(object):
         # XXX: the namechooer does a getattr('check_id'), which results in a python
         #      script (!!) which is aquired. That script makes the name chooser not choose
         #      correctly, thus we strip acquisition. Bah.
+        normalizer = component.getUtility(IIDNormalizer)
         chooser = INameChooser(self.context)
-        id = chooser.chooseName(subject, aq_base(self.context))
+        id = chooser.chooseName(normalizer.normalize(subject), aq_base(self.context))
 
         self.context.invokeFactory(
                 'News Item',
