@@ -219,6 +219,19 @@ class ICalEventFactory(object):
                             nkw[target] = elem
                             break
 
+         # attendees
+         # There can be multiple "ATTENDEE" properties inside an VEVENT, the icalendar library returns a list of
+         # vCalAddress objects if so, or otherwise a single vCalAddress object
+         # we'll extract the CN (common name) if there is one inside and use it as an entry in the attendees linesfield
+            source = 'ATTENDEE'
+            target = 'attendees'
+            if not target in nkw.keys():
+                if source in eventobject.keys():
+                    adrobjs = eventobject.get(source)
+                    if type(adrobjs) == list:
+                       nkw[target] = [item.params['CN'] for item in adrobjs if item.params.has_key('CN')]
+                    elif adrobjs.params.has_key('CN'):
+                       nkw[target] = [adrobjs.params['CN']]
 
             _ = context.invokeFactory("Event", **nkw)
             event.notify(ObjectInitializedEvent(getattr(context, nkw['id'], None)))

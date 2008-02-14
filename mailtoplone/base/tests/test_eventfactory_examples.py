@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# File: test_eventfactory_time.py
+# File: test_eventfactory_examples.py
 #
 # Copyright (c) InQuant GmbH
 #
@@ -61,6 +61,9 @@ class TestEVTOwa(MailToPloneBaseTestCase):
     def testEventEndDate(self):
         self.failUnless(str(self.e.endDate.toZone('UTC')) == '2008/02/12 09:00:00 Universal')
 
+    def testEventAttendees(self):
+        self.failUnless(self.e.attendees == (u'MisterXXX',))
+
 class TestEVTPlone(MailToPloneBaseTestCase):
 
     def afterSetUp(self):
@@ -105,6 +108,9 @@ class TestEVTApple(MailToPloneBaseTestCase):
 
     def testEventEndDate(self):
         self.failUnless(str(self.e.endDate.toZone('UTC')) == '2008/02/13 18:15:00 Universal')
+
+    def testEventAttendees(self):
+        self.failUnless(self.e.attendees == (u'Mr. X', u'Mr. Y'))
 
 def test_suite():
     suite = unittest.TestSuite()
