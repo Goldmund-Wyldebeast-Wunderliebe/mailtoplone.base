@@ -1,3 +1,10 @@
+2008-02-18 mr_savage <hans-peter.locher@inquant.de>
+    * version 0.2 build 15
+    * added first version of emailview, files:
+        browser/emailview.py
+        browser/emailview.pt
+        tests/test_emailview.py
+
 2008-02-14 mr_savage <hans-peter.locher@inquant.de>
     * version 0.2 build 14
     * added unittests for BodyFactory
