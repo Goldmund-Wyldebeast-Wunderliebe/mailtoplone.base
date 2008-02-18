@@ -120,12 +120,12 @@ class EmailView(BrowserView):
 
     @memoize
     def body(self):
-        """this is bad because of
-        Insertion of non-unicode non-ascii non-utf8 encoded text in TAL is deprecated and will be broken in Plone 3.5 !!!
-        """
         bodyfactory = component.getUtility(IBodyFactory)
         body, content_type, charset = bodyfactory(self.context.data)
-        #xxx Todo: decode body and encode for presentation
+        try:
+            body = body.decode(charset).encode('utf-8')
+        except (LookupError, TypeError):
+            pass
         return body
 
     

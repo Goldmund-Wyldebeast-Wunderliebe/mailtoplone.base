@@ -1,4 +1,11 @@
 2008-02-18 mr_savage <hans-peter.locher@inquant.de>
+    * version 0.2 build 17
+    * emailview.py:
+        body now will be decoded according to charset returned by BodyFactory
+        and encoded as utf-8 for presentation. If returned charset is None, or
+        not an available encoding, body won't be recoded
+ 
+2008-02-18 mr_savage <hans-peter.locher@inquant.de>
     * version 0.2 build 16
     * utilities.py:
       Bodyfactory now returns a charset as third return value (None if there is no one) for
