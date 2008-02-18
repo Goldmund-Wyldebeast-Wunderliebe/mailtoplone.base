@@ -1,4 +1,9 @@
 2008-02-18 mr_savage <hans-peter.locher@inquant.de>
+    * version 0.2 build 18
+    * emailview.py:
+        Encoded headers will be recoded to utf-8 for presentation
+
+2008-02-18 mr_savage <hans-peter.locher@inquant.de>
     * version 0.2 build 17
     * emailview.py:
         body now will be decoded according to charset returned by BodyFactory

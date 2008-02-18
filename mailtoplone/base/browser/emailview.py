@@ -78,7 +78,18 @@ class EmailView(BrowserView):
         m = email.message_from_string(self.context.data)
         for name in headerlist:
             if m.has_key(name):
-                header = m[name]
+                header = ""
+                for item in decode_header(m[name]):
+                    try:
+                        if header == "":
+                            header = header + item[0].decode(item[1]).encode('utf-8')
+                        else:
+                            header = header + " " +item[0].decode(item[1]).encode('utf-8')
+                    except (LookupError, TypeError):
+                        if header == "":
+                            header = header + item[0]
+                        else:
+                            header = header + " " +item[0]
                 yield dict( name=name, content=header)
 
 
