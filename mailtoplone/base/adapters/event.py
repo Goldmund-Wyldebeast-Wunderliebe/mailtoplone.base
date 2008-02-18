@@ -45,9 +45,9 @@ class EventMailDropBox(object):
         a string with the complete email content """
 
         factory = component.queryUtility(IEventFactory)
-        # get the body and matching content_type
+        # get the body and matching content_type, charset
         bodyfactory = component.queryUtility(IBodyFactory)
-        body, content_type = bodyfactory(mail)
+        body, content_type, charset = bodyfactory(mail)
         format = content_type
 
         mailobj = email.message_from_string(mail)

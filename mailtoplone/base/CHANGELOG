@@ -1,4 +1,12 @@
 2008-02-18 mr_savage <hans-peter.locher@inquant.de>
+    * version 0.2 build 16
+    * utilities.py:
+      Bodyfactory now returns a charset as third return value (None if there is no one) for
+      the found body
+    * adapters/event.py, adapters/blog.py, browser/emailview.py:
+      refactored usage of BodyFactory (third parameter)
+
+2008-02-18 mr_savage <hans-peter.locher@inquant.de>
     * version 0.2 build 15
     * added first version of emailview, files:
         browser/emailview.py

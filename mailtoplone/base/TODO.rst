@@ -14,9 +14,10 @@ emailview
   yield dict( name=name, content=[header for header in decode_header(m[name])])
 
 - body needs to be decoded also,
-  therefore need to determine encoding of body
-  change BodyFactory utility to extract the charset for the
-  returned body and return, body, content_type, charset
+  BodyFactory returns charset ( None if it isn't specified)
+  use return charset to decode(charset) and encode as utf-8
+  returned charset might be not an available charset for decoding, 
+  in this case don't decode / encode
 
 - create download for attachments
 

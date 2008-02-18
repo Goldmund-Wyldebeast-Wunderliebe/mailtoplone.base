@@ -124,8 +124,8 @@ class EmailView(BrowserView):
         Insertion of non-unicode non-ascii non-utf8 encoded text in TAL is deprecated and will be broken in Plone 3.5 !!!
         """
         bodyfactory = component.getUtility(IBodyFactory)
-        body, content_type = bodyfactory(self.context.data)
-        # xxx we need to encode the body appropriate, therefore the utility needs to return the encoding of the part
+        body, content_type, charset = bodyfactory(self.context.data)
+        #xxx Todo: decode body and encode for presentation
         return body
 
     

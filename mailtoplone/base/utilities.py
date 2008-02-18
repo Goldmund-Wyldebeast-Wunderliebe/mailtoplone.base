@@ -77,25 +77,29 @@ class BodyFactory(object):
                     body_found = True
                     body = part.get_payload(decode=1)
                     content_type = part.get_content_type()
+                    charset = part.get_content_charset()
 
         for part in mailobj.walk():
             if part.get_content_type() == 'text/plain' and not body_found:
                     body_found = True
                     body = part.get_payload(decode=1)
                     content_type = part.get_content_type()
+                    charset = part.get_content_charset()
 
         for part in mailobj.walk():
             if part.get_content_type() == 'text/rfc822' and not body_found:
                     body_found = True
                     body = part.get_payload(decode=1)
                     content_type = 'text/plain'
+                    charset = part.get_content_charset()
 
         if not body_found:
                     body_found = True
-                    body = ""
+                    body = ''
                     content_type = 'text/plain'
+                    charset = None
 
-        return body, content_type
+        return body, content_type, charset
 
 
 class ICalEventFactory(object):

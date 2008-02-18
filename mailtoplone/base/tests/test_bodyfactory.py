@@ -48,7 +48,7 @@ Content-Type: multipart/mixed;
 	boundary="next"
 
 --next
-Content-Type: text/plain;
+Content-Type: text/plain; charset=xy-charset;
 
 plain content1
 --next
@@ -67,7 +67,7 @@ Content-Type: text/plain;
 
 plain content
 --next
-Content-Type: text/html;
+Content-Type: text/html; charset=iso-8859-1;
 
 html content
 --next--
@@ -140,44 +140,52 @@ class TestBodyFactory(MailToPloneBaseTestCase):
         self.factory = component.queryUtility(IBodyFactory)
 
     def test_multioneplain(self):
-        body, content_type = self.factory(MULTIONEPLAIN)
+        body, content_type, charset = self.factory(MULTIONEPLAIN)
         self.assertEquals(body,'plain content')
         self.assertEquals(content_type,'text/plain')
+        self.assertEquals(charset,None)
 
     def test_multitwoplain(self):
-        body, content_type = self.factory(MULTITWOPLAIN)
+        body, content_type, charset = self.factory(MULTITWOPLAIN)
         self.assertEquals(body,'plain content1')
         self.assertEquals(content_type,'text/plain')
+        self.assertEquals(charset,'xy-charset')
 
     def test_multionehtml(self):
-        body, content_type = self.factory(MULTIONEHTML)
+        body, content_type, charset= self.factory(MULTIONEHTML)
         self.assertEquals(body,'html content')
         self.assertEquals(content_type,'text/html')
+        self.assertEquals(charset,'iso-8859-1')
 
     def test_multitwohtml(self):
-        body, content_type = self.factory(MULTITWOHTML)
+        body, content_type, charset = self.factory(MULTITWOHTML)
         self.assertEquals(body,'html content1')
         self.assertEquals(content_type,'text/html')
+        self.assertEquals(charset,None)
 
     def test_multionerfc822(self):
-        body, content_type = self.factory(MULTIONERFC822)
+        body, content_type, charset = self.factory(MULTIONERFC822)
         self.assertEquals(body,'rfc822 content')
         self.assertEquals(content_type,'text/plain')
+        self.assertEquals(charset,None)
 
     def test_multitworfc822(self):
-        body, content_type = self.factory(MULTITWORFC822)
+        body, content_type, charset = self.factory(MULTITWORFC822)
         self.assertEquals(body,'rfc822 content1')
         self.assertEquals(content_type,'text/plain')
+        self.assertEquals(charset,None)
 
     def test_multiother(self):
-        body, content_type = self.factory(MULTIOTHER)
+        body, content_type, charset = self.factory(MULTIOTHER)
         self.assertEquals(body,'')
         self.assertEquals(content_type,'text/plain')
+        self.assertEquals(charset,None)
 
     def test_noemail(self):
-        body, content_type = self.factory("")
+        body, content_type, charset = self.factory("")
         self.assertEquals(body,'')
         self.assertEquals(content_type,'text/plain')
+        self.assertEquals(charset,None)
 
 def test_suite():
     suite = unittest.TestSuite()
