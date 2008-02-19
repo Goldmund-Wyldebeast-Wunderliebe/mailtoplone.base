@@ -1,3 +1,9 @@
+2008-02-19 mr_savage <hans-peter.locher@inquant.de>
+    * version 0.2 build 19
+    * emailview.py, emailview.pt:
+        refactored encoding of headers, will be encoded unicode
+        added attachments as downloadlinks
+
 2008-02-18 mr_savage <hans-peter.locher@inquant.de>
     * version 0.2 build 18
     * emailview.py:

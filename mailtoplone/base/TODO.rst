@@ -5,9 +5,4 @@ mailtoplone base TODO
 :Date:      $Date$
 :Revision:  $Revision$
 
-emailview
----------
-
-- create download for attachments
-
- vim: set ft=rst tw=75 nocin nosi ai sw=4 ts=4 expandtab:
+vim: set ft=rst tw=75 nocin nosi ai sw=4 ts=4 expandtab:

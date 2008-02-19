@@ -25,12 +25,14 @@ __version__   = '$Revision: 1.7 $'[11:-2]
 
 import email
 from email.Header import decode_header
+import urllib
 
 from zope.interface import implements, Interface
 from zope import component
 
 from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.Archetypes.utils import contentDispositionHeader
 
 from plone.memoize.instance import memoize
 
@@ -55,7 +57,6 @@ class EmailView(BrowserView):
     implements(IEmailView)
         
     def __init__(self, context, request):
-        # do stuff which is always needed here (convert data to email object e.g.)
         self.context = context
         self.request = request
 
@@ -63,39 +64,55 @@ class EmailView(BrowserView):
 
     def __call__(self):
         if self.request.get("download"):
-            pass
-            # do download here
+            m = email.message_from_string(self.context.data)
+            parts = [item for item in m.walk() if item.get_filename() != None]
+            if parts[int(self.request.get("download"))].is_multipart():
+                data = parts[int(self.request.get("download"))].get_payload()
+            else:
+                data = parts[int(self.request.get("download"))].get_payload(decode=1)
+            REQUEST = self.request
+            RESPONSE = REQUEST.RESPONSE
+            filename = REQUEST.get("filename")
+            mimetype = REQUEST.get("mimetype")
+            if filename is not None:
+                header_value = contentDispositionHeader(
+                    disposition='attachment',
+                    filename=filename)
+                RESPONSE.setHeader("Content-disposition", header_value)
+                RESPONSE.setHeader("Content-Type", mimetype)
+            return data
         else:
             return self.render()
 
     @property
     def title(self):
         return self.context.title
-    
+
+    def decodeheader(self, header_text, default="ascii"):
+        """Decode the specified header"""
+        headers = decode_header(header_text)
+        header_sections = [unicode(text, charset or default)
+                       for text, charset in headers]
+        return u"".join(header_sections)
+
     @memoize
     def headers(self):
+        """
+        returns a list of dicts like::
+
+        [ { name="Subject", items=["muh", "mah"] }
+
+        """
         headerlist = ['Subject','From','To','CC']
+        adressheaders = headerlist[1:]
         m = email.message_from_string(self.context.data)
         for name in headerlist:
             if m.has_key(name):
-                header = ""
-                for item in decode_header(m[name]):
-                    try:
-                        if header == "":
-                            header = header + item[0].decode(item[1]).encode('utf-8')
-                        else:
-                            header = header + " " +item[0].decode(item[1]).encode('utf-8')
-                    except (LookupError, TypeError):
-                        if header == "":
-                            header = header + item[0]
-                        else:
-                            header = header + " " +item[0]
-                yield dict( name=name, content=header)
-
-
-    def getAttachmentById(self, id):
-        """ this results in a file-like object and mimetype """
-        return file("/tmp/muha.txt"), "text/plain"
+                decoded = self.decodeheader(m[name])
+                if name in adressheaders:
+                    yield dict( name=name, contents=decoded.split(', ') )
+                else:
+                    yield dict( name=name, contents=[decoded] )
 
 
     def attachments(self):
@@ -104,30 +121,25 @@ class EmailView(BrowserView):
               "id":       "someidwhichisunique",
               "filename": "muha.txt" }
         """
-        pass
-        #yield dict(
-        #        mimetype='text/plain',
-        #        filename='filexy.txt',
-        #        id='boundaryidosonstiggeid',
-        #        download_url="http://www.web.de"
-        #        )
-        #for part in email.walk():
-        #    if part.is_attachment():
-        #        boundary_id = part.getid()
-        #        # use urlquote here (urllib.urlquote)
-        #        url="%s/view?download=%s&mimetype=%s&filename=%s" % (
-        #                self.context.absolute_url(),
-        #                boundary_id,
-        #                mimetype,
-        #                fn )
-
-        #        yield dict(
-        #                mimetype=mimetype,
-        #                filename=fn,
-        #                id=boundary_id,
-        #                download_url=url
-        #                )
-
+        # we'll make an attachment for every part of the mail which has a
+        # filename parameter
+        m = email.message_from_string(self.context.data)
+        parts = [item for item in m.walk() if item.get_filename() != None]
+        for index, elem in enumerate(parts):
+            mimetype= elem.get_content_type()
+            fn= elem.get_filename()
+            id = index
+            url="%s/view?download=%s&mimetype=%s&filename=%s" % (
+                self.context.absolute_url(),
+                id,
+                urllib.quote(mimetype),
+                urllib.quote(fn) )
+            yield dict(
+                    mimetype=mimetype,
+                    filename=fn,
+                    id=id,
+                    download_url=url
+                    )
 
     @memoize
     def body(self):

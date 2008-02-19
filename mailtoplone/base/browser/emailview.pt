@@ -31,16 +31,19 @@
 
         <div tal:replace="structure provider:plone.abovecontentbody" />
 
-        <!-- headers -->
         <dl id="email-headers">
-          <tal:rep repeat="header view/headers">
+          <tal:header repeat="header view/headers">
             <dt tal:content="header/name">
              Subject
             </dt>
-            <dd tal:content="header/content">
-              A test Mail
+            <dd>
+              <ul>
+                <tal:header_content tal:repeat="header_content header/contents">
+                  <li tal:content="header_content">A single header value</li>
+                </tal:header_content>
+              </ul>
             </dd>
-          </tal:rep>
+          </tal:header>
         </dl>
 
         <!-- body text -->
