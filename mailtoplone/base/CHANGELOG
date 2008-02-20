@@ -1,3 +1,9 @@
+2008-02-20 mr_savage <hans-peter.locher@inquant.de>
+    * version 0.2
+    * emailview.py:
+        changed download, if part is_multipart, use simple str(part)
+        as content for download
+
 2008-02-19 mr_savage <hans-peter.locher@inquant.de>
     * version 0.2 build 19
     * emailview.py, emailview.pt:

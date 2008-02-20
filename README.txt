@@ -40,7 +40,15 @@ InBox:
 
 Email:
     
-    File like content type conatining the mailstring inside the data field
+    File like content type conatining the mailstring inside the data field.
+    View registered for IEmail: emailview ( as standard view )
+    shows: 
+        
+        - headers Subject, From, To, Cc
+        
+        - body (prefers text/html parts over text/plain parts)
+
+        - attachments (download link)
 
 Adapters
 ********

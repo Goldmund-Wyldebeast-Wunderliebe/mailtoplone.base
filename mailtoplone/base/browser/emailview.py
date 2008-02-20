@@ -67,7 +67,7 @@ class EmailView(BrowserView):
             m = email.message_from_string(self.context.data)
             parts = [item for item in m.walk() if item.get_filename() != None]
             if parts[int(self.request.get("download"))].is_multipart():
-                data = parts[int(self.request.get("download"))].get_payload()
+                data = str(parts[int(self.request.get("download"))])
             else:
                 data = parts[int(self.request.get("download"))].get_payload(decode=1)
             REQUEST = self.request
