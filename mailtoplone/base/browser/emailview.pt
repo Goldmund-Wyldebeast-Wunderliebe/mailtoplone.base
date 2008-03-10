@@ -47,8 +47,14 @@
         </dl>
 
         <!-- body text -->
-        <div id="email-body" tal:content="structure view/body">
+        <div id="email-body" tal:define="body view/body">
+          <tal:cond condition="body/formatted" content="structure body/text">
+          </tal:cond>
+          <pre tal:condition="not: body/formatted" tal:content="body/text">
+          </pre>
         </div>
+
+        <hr/>
 
         <!-- attachment link list -->
         <ul id="email-attachments">

@@ -24,6 +24,13 @@
       permission="zope2.View"
     />
 
+    <browser:page
+      for="..interfaces.IEmail"
+      name="download"
+      class=".emailview.AttachmentDownload"
+      permission="zope2.View"
+    />
+
     <browser:menuItem
         for="..interfaces.IEmail"
         menu="plone_displayviews"

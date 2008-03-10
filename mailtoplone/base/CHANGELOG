@@ -1,3 +1,11 @@
+2008-03-10  Stefan Eletzhofer <stefan.eletzhofer@inquant.de>
+
+    * browser/emailview.py (AttachmentDownload): added download browser view
+    * browser/emailview.py (EmailView.attachments): fixed (?) unicode issues
+    * browser/emailview.pt: fixed view to use "pre" tags for non-html mails.
+    * browser/emailview.py (EmailView.attachments): return a dict with more
+		infos
+
 2008-02-20 mr_savage <hans-peter.locher@inquant.de>
     * version 0.2
     * emailview.py:

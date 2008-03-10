@@ -44,18 +44,18 @@ class IEmailView(Interface):
     """
       EmailView interface
     """
-    
+
     def test():
         """ test method"""
-    
 
-            
+
+
 class EmailView(BrowserView):
     """
     EmailView for having a nice representation of the Email
     """
     implements(IEmailView)
-        
+
     def __init__(self, context, request):
         self.context = context
         self.request = request
@@ -63,26 +63,7 @@ class EmailView(BrowserView):
     render = ViewPageTemplateFile('emailview.pt')
 
     def __call__(self):
-        if self.request.get("download"):
-            m = email.message_from_string(self.context.data)
-            parts = [item for item in m.walk() if item.get_filename() != None]
-            if parts[int(self.request.get("download"))].is_multipart():
-                data = str(parts[int(self.request.get("download"))])
-            else:
-                data = parts[int(self.request.get("download"))].get_payload(decode=1)
-            REQUEST = self.request
-            RESPONSE = REQUEST.RESPONSE
-            filename = REQUEST.get("filename")
-            mimetype = REQUEST.get("mimetype")
-            if filename is not None:
-                header_value = contentDispositionHeader(
-                    disposition='attachment',
-                    filename=filename)
-                RESPONSE.setHeader("Content-disposition", header_value)
-                RESPONSE.setHeader("Content-Type", mimetype)
-            return data
-        else:
-            return self.render()
+        return self.render()
 
     @property
     def title(self):
@@ -126,11 +107,11 @@ class EmailView(BrowserView):
         m = email.message_from_string(self.context.data)
         parts = [item for item in m.walk() if item.get_filename() != None]
         for index, elem in enumerate(parts):
-            charset = elem.get_content_charset()
+            charset = elem.get_content_charset() or "ISO-8859-1"
             mimetype= elem.get_content_type().decode(charset).encode("ascii", "ignore")
             fn= elem.get_filename().decode(charset).encode("ascii", "ignore")
             id = index
-            url="%s/view?download=%s&mimetype=%s&filename=%s" % (
+            url="%s/@@download?download=%s&mimetype=%s&filename=%s" % (
                 self.context.absolute_url(),
                 id,
                 urllib.quote(mimetype),
@@ -150,15 +131,50 @@ class EmailView(BrowserView):
             body = body.decode(charset).encode('utf-8')
         except (LookupError, TypeError):
             pass
-        return body
 
-    
+        return dict(
+                text=body,
+                content_type=content_type,
+                charset=charset,
+                formatted=content_type == "text/html",
+        )
+
+
     def test(self):
         """ 
         test method 
         """
         dummy = _(u'a dummy string')
-        
+
         return {'dummy': dummy}
+
+
+class AttachmentDownload(BrowserView):
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+
+    def __call__(self):
+        if self.request.get("download", None) is None:
+            request.RESPONSE.redirect(self.context.absolute_url())
+
+        m = email.message_from_string(self.context.data)
+        parts = [item for item in m.walk() if item.get_filename() != None]
+        if parts[int(self.request.get("download"))].is_multipart():
+            data = str(parts[int(self.request.get("download"))])
+        else:
+            data = parts[int(self.request.get("download"))].get_payload(decode=1)
+        REQUEST = self.request
+        RESPONSE = REQUEST.RESPONSE
+        filename = REQUEST.get("filename")
+        mimetype = REQUEST.get("mimetype")
+        if filename is not None:
+            header_value = contentDispositionHeader(
+                disposition='attachment',
+                filename=filename)
+            RESPONSE.setHeader("Content-disposition", header_value)
+            RESPONSE.setHeader("Content-Type", mimetype)
+        return data
+
 
 # vim: set ft=python ts=4 sw=4 expandtab :
