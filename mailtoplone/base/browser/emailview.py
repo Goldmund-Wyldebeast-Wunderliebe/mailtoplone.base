@@ -126,8 +126,9 @@ class EmailView(BrowserView):
         m = email.message_from_string(self.context.data)
         parts = [item for item in m.walk() if item.get_filename() != None]
         for index, elem in enumerate(parts):
-            mimetype= elem.get_content_type()
-            fn= elem.get_filename()
+            charset = elem.get_content_charset()
+            mimetype= elem.get_content_type().decode(charset).encode("ascii", "ignore")
+            fn= elem.get_filename().decode(charset).encode("ascii", "ignore")
             id = index
             url="%s/view?download=%s&mimetype=%s&filename=%s" % (
                 self.context.absolute_url(),
