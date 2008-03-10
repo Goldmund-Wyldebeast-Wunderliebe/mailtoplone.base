@@ -5,6 +5,7 @@
     * browser/emailview.pt: fixed view to use "pre" tags for non-html mails.
     * browser/emailview.py (EmailView.attachments): return a dict with more
 		infos
+    * profiles/default/types/InBox.xml: allow for Documents and Collections.
 
 2008-02-20 mr_savage <hans-peter.locher@inquant.de>
     * version 0.2
