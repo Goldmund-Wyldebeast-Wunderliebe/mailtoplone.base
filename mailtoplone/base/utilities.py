@@ -31,6 +31,7 @@ from DateTime import DateTime
 from zope import component
 from zope import interface
 from zope import event
+
 from zope.app.container.interfaces import INameChooser
 from plone.i18n.normalizer.interfaces import IIDNormalizer
 
@@ -50,6 +51,7 @@ from Products.Archetypes.event import ObjectInitializedEvent
 
 from mailtoplone.base import interfaces
 from mailtoplone.base.myutils import dt2DT
+from mailtoplone.base.events import MailDroppedEvent
 
 class BaseDropBoxFactory(object):
     interface.implements(interfaces.IMailDropBoxFactory)
@@ -274,6 +276,7 @@ class ICalEventFactory(object):
 
             _ = context.invokeFactory("Event", **nkw)
             event.notify(ObjectInitializedEvent(getattr(context, nkw['id'], None)))
+            event.notify(MailDroppedEvent(getattr(context, nkw['id'], None), context))
 
         return context.get(_)
 

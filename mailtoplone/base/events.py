@@ -26,7 +26,7 @@ __version__   = '$Revision$'[11:-2]
 from zope import interface
 from zope import component
 
-from zope.event import notify
+from plone.app.contentrules.handlers import execute
 
 from mailtoplone.base.interfaces import IMailDroppedEvent
 
@@ -37,12 +37,8 @@ class MailDroppedEvent(object):
         self.object = object
         self.context = context
 
-_marker = object()
-
-def maildropped(object, event):
-
-    if event.context is not _marker:
-        notify(MailDroppedEvent(object, _marker))
+def maildropped(event):
+    execute(event.context, event)
 
 
 # vim: set ft=python ts=4 sw=4 expandtab :

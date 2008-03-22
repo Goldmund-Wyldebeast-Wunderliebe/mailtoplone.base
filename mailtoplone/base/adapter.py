@@ -25,12 +25,14 @@ __version__   = '$Revision: 1.7 $'[11:-2]
 
 
 from zope import interface, component
+from zope.event import notify
 from zope.app.container.interfaces import INameChooser
 from plone.i18n.normalizer.interfaces import IIDNormalizer
      
 from Acquisition import aq_base
 
 from mailtoplone.base.interfaces import IMailDropBox
+from mailtoplone.base.events import MailDroppedEvent
 
 class MailDropBox(object):
     """ adapts a IMailDropBoxMarker to a IMailDropBox """
@@ -59,5 +61,6 @@ class MailDropBox(object):
                                    content_type=content_type, file=mail)
         getattr(self.context, id, None).setContentType(content_type)
         getattr(self.context, id, None).processForm()
+        notify(MailDroppedEvent(getattr(self.context, id, None), self.context))
         
 # vim: set ft=python ts=4 sw=4 expandtab :
