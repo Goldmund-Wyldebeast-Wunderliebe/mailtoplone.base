@@ -50,9 +50,43 @@ the inbox::
     >>> self.portal.inbox.listFolderContents()[5].data
     'dropped via view'
 
+Email title
+-----------
 
+We generate the tile for email objects out of the subject, otherwise we'll
+take the id.
 
+First, let's create various minimalistic emails::
 
+    >>> withsubject = 'subject: withsubject'
+    >>> withSubject = 'Subject: withSubject'
+    >>> withbetreff = 'betreff: withbetreff'
+    >>> withBetreff = 'Betreff: withBetreff'
+
+Let's drop this emails to our inbox::
+
+    >>> theview.drop(withsubject)
+    >>> self.portal.inbox.listFolderContents()[6].Title()
+    'withsubject'
+
+    >>> theview.drop(withSubject)
+    >>> self.portal.inbox.listFolderContents()[7].Title()
+    'withSubject'
+
+    >>> theview.drop(withbetreff)
+    >>> self.portal.inbox.listFolderContents()[8].Title()
+    'withbetreff'
+
+    >>> theview.drop(withBetreff)
+    >>> self.portal.inbox.listFolderContents()[9].Title()
+    'withBetreff'
+
+If we have multiple subject / betreff / ... in our mail, let's take the
+first Subject::
+
+    >>> theview.drop('Subject: SUB\nBetreff: BET')
+    >>> self.portal.inbox.listFolderContents()[10].Title()
+    'SUB'
 
 ::
 

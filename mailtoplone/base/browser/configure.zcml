@@ -14,6 +14,7 @@
       class=".xmlrpcview.XMLRPCView"
       attribute="drop"
       permission="zope.Public"
+      allowed_interface=".xmlrpcview.IXMLRPCView"
     />
 
     <!-- EMailView -->

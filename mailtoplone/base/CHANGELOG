@@ -1,3 +1,9 @@
+2008-06-25 mr_savage <hans-peter.locher@inquant.de>
+    * version 0.2.4
+    * browser/configure.zcml: added allowed_interfaces declaration for xmlrpcview
+    * browser/adapter.py: generate title for dropped emails from
+      Subject, subject, Betreff, betreff or use id if none present in mail
+
 2008-03-22 mr_savage <hans-peter.locher@inquant.de>
     * version 0.2.3
     * corrected implementation of custom trigger MailDroppedEvent

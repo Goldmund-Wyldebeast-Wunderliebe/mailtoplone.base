@@ -23,6 +23,7 @@ __docformat__ = 'plaintext'
 __revision__  = "$Revision: 36831 $"
 __version__   = '$Revision: 1.7 $'[11:-2]
 
+import email
 
 from zope import interface, component
 from zope.event import notify
@@ -56,8 +57,18 @@ class MailDropBox(object):
         normalizer = component.getUtility(IIDNormalizer)
         chooser = INameChooser(self.context)
         id = chooser.chooseName(normalizer.normalize('email'), aq_base(self.context))
-        
-        self.context.invokeFactory(type ,id=id , title=id, format=format, \
+
+        #generate title, we use subject, or id if no subject in mail
+        mailobj = email.message_from_string(mail)
+        # Subject
+        for key in "Subject subject Betreff betreff".split():
+            subject = mailobj.get(key)
+            if subject:
+                break
+
+        title = subject or id
+
+        self.context.invokeFactory(type ,id=id , title=title, format=format, \
                                    content_type=content_type, file=mail)
         getattr(self.context, id, None).setContentType(content_type)
         getattr(self.context, id, None).processForm()
