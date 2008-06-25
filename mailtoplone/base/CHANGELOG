@@ -1,4 +1,9 @@
 2008-06-25 mr_savage <hans-peter.locher@inquant.de>
+    * version 0.2.5
+    * browser/adapter.py:
+        decode found subject for title generation
+
+2008-06-25 mr_savage <hans-peter.locher@inquant.de>
     * version 0.2.4
     * browser/configure.zcml: added allowed_interfaces declaration for xmlrpcview
     * browser/adapter.py: generate title for dropped emails from

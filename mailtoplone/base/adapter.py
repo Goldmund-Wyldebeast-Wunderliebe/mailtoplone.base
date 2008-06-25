@@ -24,6 +24,7 @@ __revision__  = "$Revision: 36831 $"
 __version__   = '$Revision: 1.7 $'[11:-2]
 
 import email
+from email.Header import decode_header
 
 from zope import interface, component
 from zope.event import notify
@@ -64,6 +65,7 @@ class MailDropBox(object):
         for key in "Subject subject Betreff betreff".split():
             subject = mailobj.get(key)
             if subject:
+                subject = self.decodeheader(subject)
                 break
 
         title = subject or id
@@ -73,5 +75,13 @@ class MailDropBox(object):
         getattr(self.context, id, None).setContentType(content_type)
         getattr(self.context, id, None).processForm()
         notify(MailDroppedEvent(getattr(self.context, id, None), self.context))
-        
+
+    def decodeheader(self, header_text, default="ascii"):
+        """Decode the specified header"""
+        headers = decode_header(header_text)
+        header_sections = [unicode(text, charset or default)
+                       for text, charset in headers]
+        return u"".join(header_sections)
+
+
 # vim: set ft=python ts=4 sw=4 expandtab :

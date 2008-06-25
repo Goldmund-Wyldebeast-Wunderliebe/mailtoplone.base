@@ -88,6 +88,12 @@ first Subject::
     >>> self.portal.inbox.listFolderContents()[10].Title()
     'SUB'
 
+We decode the subject header for presentation, let's drop an encoded subject::
+
+    >>> theview.drop('Subject: =?ISO-8859-15?Q?=FCld=F6m?=')
+    >>> self.portal.inbox.listFolderContents()[11].Title() == 'üldöm'
+    True
+
 ::
 
     vim: set ft=rst tw=75 nocin nosi ai sw=4 ts=4 expandtab:
