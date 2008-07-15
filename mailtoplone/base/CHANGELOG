@@ -1,3 +1,8 @@
+2008-07-15 mr_savage <hans-peter.locher@inquant.de>
+    * version 0.2.6
+    * profiles/default/portlets.xml: removed
+    * profiles/default/metadata.xml: added
+
 2008-07-04 mr_savage <hans-peter.locher@inquant.de>
     * veresion 0.2.6
     * profiles/default/propertiestool.xml:
