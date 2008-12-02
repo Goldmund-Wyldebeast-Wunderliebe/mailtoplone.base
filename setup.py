@@ -21,7 +21,7 @@ long_description = (
     'Detailed Documentation\n'
     '**********************\n'
     + '\n' +
-    read('mailtoplone', 'base', 'README.txt')
+    read('mailtoplone', 'base', 'README.rst')
     + '\n' +
     'Contributors\n'
     '************\n'
