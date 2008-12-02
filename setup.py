@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '0.2.6'
+version = '0.2.7'
 
 setup(name='mailtoplone.base',
       version=version,
@@ -26,7 +26,7 @@ setup(name='mailtoplone.base',
       install_requires=[
           'setuptools',
           'icalendar',
-          'dateutil',
+          'python-dateutil',
           # -*- Extra requirements: -*-
       ],
       entry_points="""

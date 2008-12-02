@@ -24,7 +24,7 @@ Additional egg dependecies
 **************************
 
 icalendar
-dateutil
+python-dateutil
 
 Contents
 --------

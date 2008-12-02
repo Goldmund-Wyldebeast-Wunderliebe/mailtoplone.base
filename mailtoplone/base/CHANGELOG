@@ -1,3 +1,8 @@
+2008-12-02 mr_savage <hans-peter.locher@inquant.de>
+    * version 0.2.7
+	* fix setup.py dependency, now requre python-dateutil
+	  as the package dateutil has been renamed
+
 2008-07-15 mr_savage <hans-peter.locher@inquant.de>
     * version 0.2.6
     * profiles/default/portlets.xml: removed
