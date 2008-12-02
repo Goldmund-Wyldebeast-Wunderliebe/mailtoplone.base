@@ -1,5 +1,6 @@
 2008-12-02 mr_savage <hans-peter.locher@inquant.de>
-    * version 0.2.7
+    * prepare releaes 0.2.6
+	* include more documentation in setup.py
 	* fix setup.py dependency, now requre python-dateutil
 	  as the package dateutil has been renamed
 
@@ -9,7 +10,7 @@
     * profiles/default/metadata.xml: added
 
 2008-07-04 mr_savage <hans-peter.locher@inquant.de>
-    * veresion 0.2.6
+    * version 0.2.6
     * profiles/default/propertiestool.xml:
         corrected spec to use purge=False and only add Email
         to typesUseViewActionInListings
