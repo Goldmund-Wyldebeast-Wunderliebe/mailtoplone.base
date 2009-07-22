@@ -30,11 +30,13 @@ from zope import interface, component
 from zope.event import notify
 from zope.app.container.interfaces import INameChooser
 from plone.i18n.normalizer.interfaces import IIDNormalizer
-     
+
 from Acquisition import aq_base
 
 from mailtoplone.base.interfaces import IMailDropBox
 from mailtoplone.base.events import MailDroppedEvent
+
+DEFAULT_ID = 'email'
 
 class MailDropBox(object):
     """ adapts a IMailDropBoxMarker to a IMailDropBox """
@@ -54,12 +56,8 @@ class MailDropBox(object):
         type = 'Email'
         format = 'text/plain'
         content_type='text/plain'
-        # generate id
-        normalizer = component.getUtility(IIDNormalizer)
-        chooser = INameChooser(self.context)
-        id = chooser.chooseName(normalizer.normalize('email'), aq_base(self.context))
 
-        #generate title, we use subject, or id if no subject in mail
+        #generate title
         mailobj = email.message_from_string(mail)
         # Subject
         for key in "Subject subject Betreff betreff".split():
@@ -68,7 +66,13 @@ class MailDropBox(object):
                 subject = self.decodeheader(subject)
                 break
 
-        title = subject or id
+        id = subject or DEFAULT_ID
+        title = id
+
+        # generate id
+        normalizer = component.getUtility(IIDNormalizer)
+        chooser = INameChooser(self.context)
+        id = chooser.chooseName(normalizer.normalize(id), aq_base(self.context))
 
         self.context.invokeFactory(type ,id=id , title=title, format=format, \
                                    content_type=content_type, file=mail)

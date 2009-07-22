@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.2.7 (????-??-??)
+------------------
+
+ - use subject to generate id for type Email,
+   so we avoid being limited to 1000 emails per 
+   dropbox (fixes #7) [hplocher]
+
 0.2.6 (2008-12-02)
 ------------------
 
