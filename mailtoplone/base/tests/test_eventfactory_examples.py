@@ -41,10 +41,10 @@ class TestEVTGoogle(MailToPloneBaseTestCase):
         self.e = self.folder.listFolderContents()[0]
 
     def testEventStartDate(self):
-        self.failUnless(str(self.e.startDate.toZone('UTC')) == '2007/12/04 14:30:00 Universal')
+        self.failUnless(str(self.e.startDate.toZone('UTC')) == '2007/12/04 14:30:00 UTC')
 
     def testEventEndDate(self):
-        self.failUnless(str(self.e.endDate.toZone('UTC')) == '2007/12/04 15:30:00 Universal')
+        self.failUnless(str(self.e.endDate.toZone('UTC')) == '2007/12/04 15:30:00 UTC')
 
 class TestEVTOwa(MailToPloneBaseTestCase):
 
@@ -56,10 +56,10 @@ class TestEVTOwa(MailToPloneBaseTestCase):
         self.e = self.folder.listFolderContents()[0]
 
     def testEventStartDate(self):
-        self.failUnless(str(self.e.startDate.toZone('UTC')) == '2008/02/12 08:00:00 Universal')
+        self.failUnless(str(self.e.startDate.toZone('UTC')) == '2008/02/12 08:00:00 UTC')
 
     def testEventEndDate(self):
-        self.failUnless(str(self.e.endDate.toZone('UTC')) == '2008/02/12 09:00:00 Universal')
+        self.failUnless(str(self.e.endDate.toZone('UTC')) == '2008/02/12 09:00:00 UTC')
 
     def testEventAttendees(self):
         self.failUnless(self.e.attendees == (u'MisterXXX',))
@@ -74,10 +74,10 @@ class TestEVTPlone(MailToPloneBaseTestCase):
         self.e = self.folder.listFolderContents()[0]
     
     def testEventStartDate(self):
-        self.failUnless(str(self.e.startDate.toZone('UTC')) == '2008/01/11 08:25:00 Universal')
+        self.failUnless(str(self.e.startDate.toZone('UTC')) == '2008/01/11 08:25:00 UTC')
 
     def testEventEndDate(self):
-        self.failUnless(str(self.e.endDate.toZone('UTC')) == '2008/01/11 09:25:00 Universal')
+        self.failUnless(str(self.e.endDate.toZone('UTC')) == '2008/01/11 09:25:00 UTC')
 
 class TestEVTRfc2445(MailToPloneBaseTestCase):
 
@@ -89,10 +89,10 @@ class TestEVTRfc2445(MailToPloneBaseTestCase):
         self.e = self.folder.listFolderContents()[0]
     
     def testEventStartDate(self):
-        self.failUnless(str(self.e.startDate.toZone('UTC')) == '1998/03/12 13:30:00 Universal')
+        self.failUnless(str(self.e.startDate.toZone('UTC')) == '1998/03/12 13:30:00 UTC')
 
     def testEventEndDate(self):
-        self.failUnless(str(self.e.endDate.toZone('UTC')) == '1998/03/12 14:30:00 Universal')
+        self.failUnless(str(self.e.endDate.toZone('UTC')) == '1998/03/12 14:30:00 UTC')
 
 class TestEVTApple(MailToPloneBaseTestCase):
 
@@ -104,10 +104,10 @@ class TestEVTApple(MailToPloneBaseTestCase):
         self.e = self.folder.listFolderContents()[0]
     
     def testEventStartDate(self):
-        self.failUnless(str(self.e.startDate.toZone('UTC')) == '2008/02/13 17:15:00 Universal')
+        self.failUnless(str(self.e.startDate.toZone('UTC')) == '2008/02/13 17:15:00 UTC')
 
     def testEventEndDate(self):
-        self.failUnless(str(self.e.endDate.toZone('UTC')) == '2008/02/13 18:15:00 Universal')
+        self.failUnless(str(self.e.endDate.toZone('UTC')) == '2008/02/13 18:15:00 UTC')
 
     def testEventAttendees(self):
         self.failUnless(self.e.attendees == (u'Mr. X', u'Mr. Y'))
