@@ -61,5 +61,7 @@ setup(name='mailtoplone.base',
       ],
       entry_points="""
       # -*- Entry points: -*-
+      [z3c.autoinclude.plugin]
+      target = plone
       """,
       )
