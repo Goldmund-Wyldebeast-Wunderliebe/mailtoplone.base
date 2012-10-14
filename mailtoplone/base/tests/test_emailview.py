@@ -35,10 +35,10 @@ class TestEmailViewSetup(MailToPloneBaseTestCase):
         self.portal.invokeFactory('Email', 'm1')
 
     def test_emailview_registered(self):
-        self.portal.m1.restrictedTraverse('view')
+        self.portal.m1.restrictedTraverse('@@view')
 
     def test_IEmailView_interface(self):
-        self.failUnless(IEmailView.providedBy(self.portal.m1.restrictedTraverse('view')))
+        self.failUnless(IEmailView.providedBy(self.portal.m1.restrictedTraverse('@@view')))
 
 def test_suite():
     suite = unittest.TestSuite()
