@@ -129,11 +129,11 @@ class TestEVTFields(MailToPloneBaseTestCase):
         self.failUnless(self.folder.eventtitle.eventUrl == "http://www.eventurl.de")
 
     def testEventType(self):
-        self.failUnless(self.folder.eventtitle.eventType == (u'another event category', u'an event category'))
+        self.failUnless(self.folder.eventtitle.Subject() == (u'another event category', u'an event category'))
 
     def testEventContactName(self):
         self.failUnless(self.folder.eventtitle.contactName == u'event contact name')
-        
+
     def testEventContactEmail(self):
         self.failUnless(self.folder.eventtitle.contactEmail == u'eventcontactemail@hurz.de')
 

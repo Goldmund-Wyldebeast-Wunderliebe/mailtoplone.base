@@ -183,7 +183,7 @@ class ICalEventFactory(object):
 
             # generate the eventType
             source = 'CATEGORIES'
-            target = 'eventType'
+            target = 'subject'
             default = ''
             if not target in nkw.keys():
                 if not source in eventobject.keys():
