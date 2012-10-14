@@ -114,7 +114,7 @@ class ICalEventFactory(object):
 
         # get all VEVENT objects out of the ical_str
         events = []
-        for eventobject in icalendar.Calendar.from_string(ical_str).walk(name='VEVENT'):
+        for eventobject in icalendar.Calendar.from_ical(ical_str).walk(name='VEVENT'):
             events.append(eventobject)
             
         # extract VTIMEZONE Objects for startDate and endDate

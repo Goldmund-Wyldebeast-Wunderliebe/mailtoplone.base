@@ -5,6 +5,7 @@ Changelog
 ------------------
 
  - begin work to make Plone 4.x compatible
+   no requires icalendar >= 3.0
    [hplocher]
 
 0.2.7 (2009-07-22)
