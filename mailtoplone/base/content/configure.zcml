@@ -2,7 +2,8 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:five="http://namespaces.zope.org/five"
     i18n_domain="mailtoplone.base">	
- 
+
+    <include package="Products.CMFCore" />
     <!-- configure your content components here -->
     <!-- -*- extra stuff goes here -*- -->
     <class class=".inbox.InBox">
@@ -17,7 +18,7 @@
             />
     </class>
 
- 
+
     <class class=".email.Email">
 
         <require
