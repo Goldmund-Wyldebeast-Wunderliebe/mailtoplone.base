@@ -2,9 +2,10 @@ Changelog
 =========
 
 0.2.8 (????-??-??)
--------------------
+------------------
 
- - no changes yet
+ - begin work to make Plone 4.x compatible
+   [hplocher]
 
 0.2.7 (2009-07-22)
 ------------------
