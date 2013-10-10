@@ -30,7 +30,12 @@ from zope import interface
 from zope import component
 from zope.event import notify
 
-from zope.app.container.interfaces import INameChooser
+try:
+    from zope.container.interfaces import INameChooser
+except ImportError:
+    # Plone 4.2 (and older) compatibility
+    from zope.app.container.interfaces import INameChooser
+
 from plone.i18n.normalizer.interfaces import IIDNormalizer
 
 from Acquisition import aq_base
