@@ -105,4 +105,8 @@ dropemail:
 
     File system python script, to drop a mail to an inbox(url), specify the mail as file or use stdin
 
+fetchemail.py:
+
+    Simple Python script to fetch mail via SMTP and save it via XMLRPC to a mail2plone inbox
+
 vim: set ft=rst tw=75 nocin nosi ai sw=4 ts=4 expandtab:
