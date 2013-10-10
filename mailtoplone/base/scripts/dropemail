@@ -59,12 +59,6 @@ def main():
     mailfile = sys.stdin
     if options.mailfile:
         mailfile = file(options.mailfile, "r")
-   
-    #append viewname to url:
-    if url.endswith("/"):
-        url += "xmlrpcview"
-    else:
-        url += "/xmlrpcview"
 
     try:
         # connect to server and drop email
