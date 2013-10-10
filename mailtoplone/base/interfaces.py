@@ -29,7 +29,6 @@ from zope import interface
 from zope import schema
 
 try:
-    # Plone 4.3 compatibility
     from zope.container.constraints import contains
     from zope.container.constraints import containers
 except ImportError:
