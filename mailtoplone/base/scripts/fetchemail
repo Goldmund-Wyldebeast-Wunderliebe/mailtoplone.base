@@ -17,18 +17,18 @@ def main():
             default=None,
             help="url of the plone instance's inbox, don't forget username "\
                  "and password, example: http://usr:pwd@host/plonesite/inbox" )
-    option_parser.add_option( "-s", "--smtp", dest="smtp_server",
+    option_parser.add_option( "-i", "--imap", dest="imap_server",
             default='imap.gmail.com',
-            help="SMTP server" )
-    option_parser.add_option( "-t", "--port", dest="smtp_port",
+            help="imap server" )
+    option_parser.add_option( "-t", "--port", dest="imap_port",
             default=993,
-            help="SMTP port" )
+            help="imap port" )
     option_parser.add_option( "-e", "--email", dest="email",
             default=None,
-            help="email address or login name for SMTP server" )
+            help="email address or login name for imap server" )
     option_parser.add_option( "-p", "--password", dest="password",
             default=None,
-            help="password for SMTP server" )
+            help="password for imap server" )
 
     (options, args) = option_parser.parse_args()
 
@@ -40,12 +40,12 @@ def main():
             return 1
 
     url = options.url
-    smtp_server = options.smtp_server
-    smtp_port = options.smtp_port
+    imap_server = options.imap_server
+    imap_port = options.imap_port
     email = options.email
     password = options.password
 
-    mailbox = imaplib.IMAP4_SSL(smtp_server, smtp_port)
+    mailbox = imaplib.IMAP4_SSL(imap_server, imap_port)
     mailbox.login(email, password)
     mailbox.select()
 
