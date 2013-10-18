@@ -10,7 +10,7 @@
     <!-- publishing the adapter MailDropBox method drop for usage with xmlrpc -->
     <browser:page
       for="..interfaces.IMailDropBoxMarker"
-      name="xmlrpcview"
+      name="drop"
       class=".xmlrpcview.XMLRPCView"
       attribute="drop"
       permission="zope.Public"
