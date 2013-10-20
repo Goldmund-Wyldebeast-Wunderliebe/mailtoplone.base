@@ -28,10 +28,13 @@ from zope import component
 from zope import interface
 from zope import schema
 
-
-from zope.app.container.constraints import contains
-from zope.app.container.constraints import containers
-
+try:
+    from zope.container.constraints import contains
+    from zope.container.constraints import containers
+except ImportError:
+    # Plone 4.2 (and older) compatibility
+    from zope.app.container.constraints import contains
+    from zope.app.container.constraints import containers
 
 from mailtoplone.base import baseMessageFactory as _
 

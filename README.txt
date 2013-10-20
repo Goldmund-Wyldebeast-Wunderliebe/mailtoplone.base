@@ -105,4 +105,8 @@ dropemail:
 
     File system python script, to drop a mail to an inbox(url), specify the mail as file or use stdin
 
+fetchemail.py:
+
+    File system python script, to fetch SMTP mail and drop a mail to an inbox
+
 vim: set ft=rst tw=75 nocin nosi ai sw=4 ts=4 expandtab:
