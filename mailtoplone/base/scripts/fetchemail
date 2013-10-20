@@ -40,6 +40,12 @@ def main():
             return 1
 
     url = options.url
+    #append viewname to url:
+    if url.endswith("/"):
+        url += "xmlrpcview"
+    else:
+        url += "/xmlrpcview"
+
     imap_server = options.imap_server
     imap_port = options.imap_port
     email = options.email

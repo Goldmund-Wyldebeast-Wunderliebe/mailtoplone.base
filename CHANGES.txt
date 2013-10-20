@@ -4,8 +4,14 @@ Changelog
 0.2.8 (????-??-??)
 ------------------
 
+ - fix xmlrpcview for Plone4, thereby make
+   scripts dropemail and fetchemail work.
+   [hplocher]
+ - Fix imports for Plone 4.3 compatibility, 
+   added script fetchemail to fetch mails from imap and drop to inbox
+   [kimcheeleong]
  - begin work to make Plone 4.x compatible
-   no requires icalendar >= 3.0
+   now requires icalendar >= 3.0
    make all existing tests pass with Plone 4.2
    [hplocher]
 
