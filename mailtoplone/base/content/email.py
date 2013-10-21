@@ -1,6 +1,7 @@
 """Definition of the Email content type
 """
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import safe_unicode
 
 from zope.component import getUtility, getAdapter, getMultiAdapter
 from zope.interface import implements, directlyProvides
@@ -59,7 +60,7 @@ class Email(file.ATFile):
         if mail_body.get('content_type') == 'text/html':
             portal_transforms = getToolByName(self, 'portal_transforms')
             data = portal_transforms.convertTo('text/plain', mail_text, mimetype='text/html')
-            mail_text = data.getData()
+            mail_text = safe_unicode(data.getData())
 
         indexed.append(mail_text)
 
