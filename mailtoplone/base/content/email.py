@@ -1,5 +1,6 @@
 """Definition of the Email content type
 """
+from Products.CMFCore.utils import getToolByName
 
 from zope.component import getUtility, getAdapter, getMultiAdapter
 from zope.interface import implements, directlyProvides
@@ -48,8 +49,22 @@ class Email(file.ATFile):
         request = getRequest()
 
         view = getMultiAdapter((self, request,), name=u"view")
-        mail_body = view.body()
 
-        return mail_body.get('text', '')
+        headers =  view.headers()
+        indexed = [x.get('contents', '')[0] for x in headers]
+
+        mail_body = view.body()
+        mail_text = mail_body.get('text', '')
+
+        if mail_body.get('content_type') == 'text/html':
+            portal_transforms = getToolByName(self, 'portal_transforms')
+            data = portal_transforms.convertTo('text/plain', mail_text, mimetype='text/html')
+            mail_text = data.getData()
+
+        indexed.append(mail_text)
+
+        searchable_text = ' '.join(indexed)
+
+        return searchable_text
 
 atapi.registerType(Email, PROJECTNAME)
