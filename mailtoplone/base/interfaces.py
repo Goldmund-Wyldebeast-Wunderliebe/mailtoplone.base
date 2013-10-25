@@ -110,4 +110,11 @@ class IMailDroppedEvent(component.interfaces.IObjectEvent):
     object = interface.Attribute("The mail object of the event.")
     context = interface.Attribute("The context of the event.")
 
+
+class IMailIndexer(component.interfaces.IObjectEvent):
+    def index(mail):
+        """ indexes mail body text and mail headers for
+            use in catalog SearcableText
+        """
+
 # vim: set ft=python ts=4 sw=4 expandtab :

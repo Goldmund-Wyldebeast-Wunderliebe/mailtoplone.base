@@ -44,6 +44,12 @@
         factory=".adapter.MailDropBox"
         />
 
+    <adapter
+        provides=".interfaces.IMailIndexer"
+        for=".interfaces.IEmail"
+        factory=".adapter.MailIndexer"
+        />
+
     <!-- Custom Trigger for Content Rules -->
     <interface 
       interface=".interfaces.IMailDroppedEvent" 

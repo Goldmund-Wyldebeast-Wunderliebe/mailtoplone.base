@@ -18,6 +18,7 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+
 __author__    = """Hans-Peter Locher<hans-peter.locher@inquant.de>"""
 __docformat__ = 'plaintext'
 __revision__  = "$Revision: 36831 $"
@@ -27,6 +28,8 @@ import email
 from email.Header import decode_header
 
 from zope import interface, component
+from zope.component import getMultiAdapter
+from zope.globalrequest import getRequest
 from zope.event import notify
 try:
     from zope.container.interfaces import INameChooser
@@ -36,8 +39,11 @@ except ImportError:
 from plone.i18n.normalizer.interfaces import IIDNormalizer
 
 from Acquisition import aq_base
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import safe_unicode
 
-from mailtoplone.base.interfaces import IMailDropBox
+
+from mailtoplone.base.interfaces import IMailDropBox, IMailIndexer
 from mailtoplone.base.events import MailDroppedEvent
 
 DEFAULT_ID = 'email'
@@ -90,6 +96,43 @@ class MailDropBox(object):
         header_sections = [unicode(text, charset or default)
                        for text, charset in headers]
         return u"".join(header_sections)
+
+
+class MailIndexer(object):
+    """ This adapter extracts searchable text from an email. The email body
+     and email headers (from, to, subject etc.) are indexed.
+    """
+
+    interface.implements(IMailIndexer)
+
+    def __init__(self, context):
+        self.context = context
+
+    def index(self):
+
+        request = getRequest()
+
+        try:
+            view = getMultiAdapter((self.context, request,), name=u"view")
+        except:
+            import pdb; pdb.set_trace()
+
+        headers =  view.headers()
+        indexed = [x.get('contents', '')[0] for x in headers]
+
+        mail_body = view.body()
+        mail_text = mail_body.get('text', '')
+
+        if mail_body.get('content_type') == 'text/html':
+            portal_transforms = getToolByName(self.context, 'portal_transforms')
+            data = portal_transforms.convertTo('text/plain', mail_text, mimetype='text/html')
+            mail_text = safe_unicode(data.getData())
+
+        indexed.append(mail_text)
+
+        searchable_text = ' '.join(indexed)
+
+        return searchable_text
 
 
 # vim: set ft=python ts=4 sw=4 expandtab :
