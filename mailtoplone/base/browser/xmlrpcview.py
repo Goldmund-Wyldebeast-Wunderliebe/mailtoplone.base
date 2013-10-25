@@ -34,18 +34,20 @@ class IXMLRPCView(Interface):
     """
       XMLRPCView interface
     """
-    
+
     def test():
         """ test method"""
-    
 
-            
+    def drop(mail):
+        """calls the adapter to drop a mail into an InBox"""
+
+
 class XMLRPCView(BrowserView):
     """
     xmlrpcview for using drop via xmlrpc
     """
     implements(IXMLRPCView)
-        
+
     def __init__(self, context, request):
         self.context = context
         self.request = request
@@ -53,14 +55,14 @@ class XMLRPCView(BrowserView):
     def drop(self, mail):
         """calls the adapter to drop a mail into an InBox"""
         IMailDropBox(self.context).drop(mail)
-    
-    
+
+
     def test(self):
-        """ 
-        test method 
+        """
+        test method
         """
         dummy = _(u'a dummy string')
-        
+
         return {'dummy': dummy}
 
 # vim: set ft=python ts=4 sw=4 expandtab :
