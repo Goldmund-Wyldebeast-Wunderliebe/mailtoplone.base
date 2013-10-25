@@ -18,7 +18,6 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-
 __author__    = """Hans-Peter Locher<hans-peter.locher@inquant.de>"""
 __docformat__ = 'plaintext'
 __revision__  = "$Revision: 36831 $"
@@ -41,7 +40,6 @@ from plone.i18n.normalizer.interfaces import IIDNormalizer
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
-
 
 from mailtoplone.base.interfaces import IMailDropBox, IMailIndexer
 from mailtoplone.base.events import MailDroppedEvent
@@ -112,10 +110,7 @@ class MailIndexer(object):
 
         request = getRequest()
 
-        try:
-            view = getMultiAdapter((self.context, request,), name=u"view")
-        except:
-            import pdb; pdb.set_trace()
+        view = getMultiAdapter((self.context, request,), name=u"view")
 
         headers =  view.headers()
         indexed = [x.get('contents', '')[0] for x in headers]
