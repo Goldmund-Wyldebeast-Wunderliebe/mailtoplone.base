@@ -29,6 +29,9 @@ def main():
     option_parser.add_option( "-p", "--password", dest="password",
             default=None,
             help="password for imap server" )
+    option_parser.add_option( "-s", "--silent", dest="silent",
+            default=0,
+            help="if set to 1, all print statements muted" )
 
     (options, args) = option_parser.parse_args()
 
@@ -51,16 +54,23 @@ def main():
     email = options.email
     password = options.password
 
+    try:
+        silent = bool(int(options.silent))
+    except Exception as e:
+        silent = False
+
     mailbox = imaplib.IMAP4_SSL(imap_server, imap_port)
     mailbox.login(email, password)
     mailbox.select()
 
     typ, data = mailbox.search(None, 'UnSeen')
     mail_nums = data[0].split()
-    print 'Got {0} emails'.format(len(mail_nums))
+    if not silent:
+        print 'Got {0} emails'.format(len(mail_nums))
 
     for idx, num in enumerate(mail_nums):
-        print 'Processing mail {0}/{1}'.format(idx+1, len(mail_nums))
+        if not silent:
+            print 'Processing mail {0}/{1}'.format(idx+1, len(mail_nums))
         typ, data = mailbox.fetch(num, '(RFC822)')  # Mail is marked as read when fetched
         mail = data[0][1]
         server = xmlrpclib.Server(url)
