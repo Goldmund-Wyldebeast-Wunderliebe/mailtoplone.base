@@ -32,6 +32,9 @@ def main():
     option_parser.add_option( "-s", "--silent", dest="silent",
             default=0,
             help="if set to 1, all print statements muted" )
+    option_parser.add_option( "-m", "--max_retries", dest="max_retries",
+            default=1000,
+            help="max number of retries" )
 
     (options, args) = option_parser.parse_args()
 
@@ -59,26 +62,46 @@ def main():
     except Exception as e:
         silent = False
 
-    mailbox = imaplib.IMAP4_SSL(imap_server, imap_port)
-    mailbox.login(email, password)
-    mailbox.select()
+    try:
+        max_retries = int(options.max_retries)
+    except Exception as e:
+        max_retries = 1000
 
-    typ, data = mailbox.search(None, 'UnSeen')
-    mail_nums = data[0].split()
-    if not silent:
-        print 'Got {0} emails'.format(len(mail_nums))
+    n_retries = 0
 
-    for idx, num in enumerate(mail_nums):
+    # Make sure to reconnect in case if it's not possible.
+    while n_retries < max_retries:
+        mailbox = imaplib.IMAP4_SSL(imap_server, imap_port)
+        mailbox.login(email, password)
+
+        try:
+            mailbox.select()
+
+            typ, data = mailbox.search(None, 'UnSeen')
+            mail_nums = data[0].split()
+            if not silent:
+                print 'Got {0} emails'.format(len(mail_nums))
+
+            for idx, num in enumerate(mail_nums):
+                if not silent:
+                    print 'Processing mail {0}/{1}'.format(idx+1, len(mail_nums))
+                typ, data = mailbox.fetch(num, '(RFC822)')  # Mail is marked as read when fetched
+                mail = data[0][1]
+                server = xmlrpclib.Server(url)
+                server.drop(mail)
+
+        except mailbox.abort as e:
+            n_retries += 1
+            continue
+
+        mailbox.close()
+        mailbox.logout()
+        break
+
+    # If max_retries exceeds the limits set, give up and write to the logs.
+    else:
         if not silent:
-            print 'Processing mail {0}/{1}'.format(idx+1, len(mail_nums))
-        typ, data = mailbox.fetch(num, '(RFC822)')  # Mail is marked as read when fetched
-        mail = data[0][1]
-        server = xmlrpclib.Server(url)
-        server.drop(mail)
-
-
-    mailbox.close()
-    mailbox.logout()
+            print "Problems connecting to the IMAP server. Gave up after {0} retries.".format(max_retries)
 
 if __name__ == "__main__":
     main()
